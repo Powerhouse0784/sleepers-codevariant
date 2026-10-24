@@ -148,21 +148,20 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 <button onClick={() => setPop(pop === "time" ? null : "time")} aria-expanded={pop === "time"} aria-label="Time travel" className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold ${offsetDays ? "border-honey text-honey" : "border-line text-mute"}`}>
                   <FastForward size={14} aria-hidden /> <span className={offsetDays ? "" : "hidden whitespace-nowrap sm:inline"}>{offsetDays ? `+${offsetDays}d` : "Time travel"}</span></button>
                 <AnimatePresence>{pop === "time" && (
-                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="card absolute right-0 top-12 z-30 w-72 p-4">
+                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="card mobile-time-popover absolute right-0 top-12 z-30 w-72 p-4">
                     <p className="text-sm font-semibold">Fast-forward the hive</p><p className="mt-1 text-xs text-mute">Watch items cool down. Nothing is saved; drag back to 0 to return.</p>
                     <input type="range" min={0} max={45} value={offsetDays} onChange={(e) => setOffset(+e.target.value)} aria-label="Days to fast-forward" className="mt-3 w-full" />
                     <div className="mt-1 flex justify-between text-xs text-mute"><span>Today</span><span>+{offsetDays} days</span><span>+45</span></div>
                     <div className="mt-3 flex gap-2"><button onClick={() => { setOffset(0); }} className="btn-blue px-3 py-1.5 text-xs">Back to today</button><button onClick={() => { resetDemo(); useIdeas.getState().reset(); usePeople.getState().reset(); useActions.getState().reset(); setOffset(0); toast("Sample data refreshed."); }} className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-xs text-mute hover:text-text"><RotateCcw size={12} aria-hidden /> Reset sample data</button></div>
                   </motion.div>)}</AnimatePresence>
               </div>
-              <button onClick={() => setPalette(true)} aria-label="Open command palette" className="hidden items-center gap-1.5 rounded-full border border-line px-3 py-2 text-xs text-mute hover:text-text md:flex"><Command size={13} aria-hidden /> K</button>
               <button onClick={() => setCalm(!calm)} aria-pressed={calm} aria-label="Calm mode, less motion" title="Calm mode" className={`rounded-full p-2.5 hover:bg-white/5 ${calm ? "text-honey" : "text-mute"}`}><Leaf size={18} /></button>
               <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} className="rounded-full p-2.5 text-mute hover:bg-white/5">{theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}</button>
               <div className="relative">
                 <button onClick={() => setPop(pop === "bell" ? null : "bell")} aria-expanded={pop === "bell"} aria-label={`Notifications, ${urgent} need attention`} className="relative rounded-full p-2.5 text-mute hover:bg-white/5">
                   <Bell size={18} />{urgent > 0 && <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-honey ring-2 ring-[var(--bg)]" />}</button>
                 <AnimatePresence>{pop === "bell" && (
-                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="card absolute right-0 top-12 z-30 w-80 p-3">
+                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="card mobile-notif-popover absolute right-0 top-12 z-30 w-80 p-3">
                     <p className="px-2 py-1 text-sm font-semibold">Needs your attention</p>
                     {attention.length === 0 ? <p className="px-2 py-3 text-sm text-mute">Nothing is cooling. Nice work.</p> :
                       attention.map((c) => <button key={c.id} onClick={() => { select(c.id); setPop(null); }} className="block w-full rounded-lg px-2 py-2 text-left text-sm hover:bg-white/5"><span className="block truncate">{c.title}</span><span className="text-xs text-mute">{getMomentum(c, now).reason}</span></button>)}

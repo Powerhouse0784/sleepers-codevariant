@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Poppins, Caveat_Brush, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import "./responsive.css";
 import Shell from "@/components/Shell";
 
 const body = Poppins({

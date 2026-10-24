@@ -25,7 +25,7 @@ export function Progress({ value, label }: { value: number; label: string }) {
 }
 
 /** Compact menu — primary actions (Archive/Capture) moved to the drag dock */
-function Menu({ e }: { e: HiveEvent }) {
+function Menu() {
   const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -34,7 +34,6 @@ function Menu({ e }: { e: HiveEvent }) {
     document.addEventListener("mousedown", off); document.addEventListener("keydown", esc);
     return () => { document.removeEventListener("mousedown", off); document.removeEventListener("keydown", esc); };
   }, [open]);
-  const item = "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[12.5px] hover:bg-white/5";
   return (
     <div ref={ref} className="relative z-10 shrink-0" data-no-drag>
       <button onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} aria-label={`Actions for ${e.title}`} className="grid h-7 w-7 place-items-center rounded-full text-mute hover:bg-white/10 hover:text-[var(--text)]"><MoreVertical size={16} aria-hidden /></button>
@@ -56,7 +55,7 @@ type Props = { e: HiveEvent; status: EventStatus; stats: EventStats; now: number
 export default function EventCard({ e, status, stats, now, layout, index }: Props) {
   const tint = status === "active" ? "#1FBF8F55" : "var(--line)";
   const common = { style: { "--tint": tint } as React.CSSProperties };
-  const menu = <Menu e={e} />;
+  const menu = <Menu />;
   const title = <span className="min-w-0 truncate text-[14px] font-bold leading-tight">{e.title}</span>;
   const meta = (
     <>

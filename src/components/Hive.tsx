@@ -5,6 +5,8 @@ import { Lightbulb, UserRound, CheckSquare, FileText } from "lucide-react";
 import type { Cell, Kind } from "@/types";
 import { getMomentum } from "@/features/momentum/momentum";
 import { STATE_COLOR } from "./MomentumBadge";
+import { commitDrag, useCanvas, zoneAt } from "@/lib/canvas";
+import { hiveCellCard } from "./hive/HiveZones";
 
 const KIND_ICON = { idea: Lightbulb, person: UserRound, action: CheckSquare, note: FileText } as const;
 const DIRS = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]];
@@ -20,8 +22,8 @@ function spiral(n: number): [number, number][] {
   return out.slice(0, n);
 }
 
-export default function Hive({ cells, nowMs, selectedId, onSelect, size = 38 }: {
-  cells: Cell[]; nowMs: number; selectedId: string | null; onSelect: (id: string) => void; size?: number;
+export default function Hive({ cells, nowMs, selectedId, size = 38 }: {
+  cells: Cell[]; nowMs: number; selectedId: string | null; size?: number;
 }) {
   const items = useMemo(() => cells
     .map((c) => ({ c, m: getMomentum(c, nowMs) }))
@@ -33,6 +35,33 @@ export default function Hive({ cells, nowMs, selectedId, onSelect, size = 38 }: 
     const a = (Math.PI / 180) * (60 * i - 30); return `${(r * Math.cos(a)).toFixed(1)},${(r * Math.sin(a)).toFixed(1)}`;
   }).join(" ");
 
+  const startPointerDrag = (e: React.PointerEvent<SVGGElement>, cell: Cell) => {
+    if (e.button !== 0 || useCanvas.getState().drag) return;
+    e.preventDefault();
+    const origin = e.currentTarget as unknown as HTMLElement;
+    useCanvas.getState().begin(hiveCellCard(cell), e.clientX, e.clientY, "pointer", origin);
+    document.body.classList.add("canvas-dragging");
+    const move = (ev: PointerEvent) => useCanvas.getState().move(ev.clientX, ev.clientY, zoneAt(ev.clientX, ev.clientY));
+    const cleanup = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", cancel);
+      document.body.classList.remove("canvas-dragging");
+    };
+    const up = () => { cleanup(); commitDrag(true); };
+    const cancel = () => { cleanup(); commitDrag(false); };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up, { once: true });
+    window.addEventListener("pointercancel", cancel, { once: true });
+  };
+  const startKeyboardDrag = (e: React.KeyboardEvent<SVGGElement>, cell: Cell) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    if (useCanvas.getState().drag) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    useCanvas.getState().begin(hiveCellCard(cell), r.left + r.width / 2, r.top + r.height / 2, "keyboard", e.currentTarget as unknown as HTMLElement);
+  };
+
   return (
     <svg viewBox={`${-E} ${-E} ${2 * E} ${2 * E}`} className="mx-auto h-auto w-full max-w-[640px]" role="group" aria-label="Momentum hive. Each cell is an idea, person or action.">
       {items.map(({ c, m }, i) => {
@@ -43,7 +72,7 @@ export default function Hive({ cells, nowMs, selectedId, onSelect, size = 38 }: 
         return (
           <g key={c.id} transform={`translate(${x} ${y})`}><motion.g className="cell" tabIndex={0} role="button"
             aria-label={`${c.title}. ${m.state}, ${c.kind}. ${m.reason}`}
-            onClick={() => onSelect(c.id)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(c.id); } }}
+            onPointerDown={(e) => startPointerDrag(e, c)} onKeyDown={(e) => startKeyboardDrag(e, c)} style={{ touchAction: "none" }}
             initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: i * 0.025, type: "spring", stiffness: 260, damping: 20 }}>
             <title>{`${c.title} (${m.state})`}</title>
             {m.state === "hot" && (

@@ -51,7 +51,7 @@ export function QuickActions({ onToday, onGrid }: { onToday: () => void; onGrid:
   const setCreate = useUI((s) => s.setCreateEvent), router = useRouter();
   const challenge = () => { const u = useActionsUI.getState(); u.setQ(""); u.setFilter("challenge"); u.setExpanded(true); router.push("/actions"); };
   const tile = "flex min-h-[64px] flex-col items-center justify-center gap-1.5 rounded-xl border border-primary/40 px-2 py-2 text-center text-[11.5px] font-medium text-[var(--text)] transition hover:border-primary hover:bg-primary/10";
-  const T = ({ I, label, onClick }: { I: LucideIcon; label: string; onClick: () => void }) => <ActionIntentCard label={label} onExecute={onClick} className={tile}><div className={tile}><I size={20} className="text-[#8fbaff]" aria-hidden />{label}</div></ActionIntentCard>;
+  const T = ({ I, label, onClick }: { I: LucideIcon; label: string; onClick: () => void }) => <ActionIntentCard label={label} onExecute={onClick} className="w-full"><div className={tile}><I size={20} className="text-[#8fbaff]" aria-hidden />{label}</div></ActionIntentCard>;
   return (
     <section className="card p-3.5" aria-labelledby="cal-quick">
       <h2 id="cal-quick" className="flex items-center gap-2 text-[15px] font-semibold"><Star size={19} className="text-honey" fill="currentColor" aria-hidden />Quick Actions</h2>
@@ -83,7 +83,7 @@ function Row({ i, now }: { i: CalItem; now: number }) {
     {isPast(i, now) && <span className="shrink-0 text-[10px] text-mute">Past</span>}<span className="text-[10px] text-mute/70">Drag</span></div></Draggable></li>;
 }
 export function ListDialog({ kind, items, now }: { kind: "upcoming" | "past"; items: CalItem[]; now: number }) {
-  const isUp = kind === "upcoming"; const openState = useCalendarUI((s) => (isUp ? s.upcomingOpen : s.pastOpen)); const set = useCalendarUI((s) => (isUp ? s.setUpcoming : s.setPast)); const open = useCalendarUI((s) => s.open);
+  const isUp = kind === "upcoming"; const openState = useCalendarUI((s) => (isUp ? s.upcomingOpen : s.pastOpen)); const set = useCalendarUI((s) => (isUp ? s.setUpcoming : s.setPast));
   const list = (isUp ? upcoming(items, now, 40) : past(items, now).slice(0, 60)); const router = useRouter();
   return (
     <Dialog open={openState} onClose={() => set(false)} label={isUp ? "Upcoming events" : "Past events"}>

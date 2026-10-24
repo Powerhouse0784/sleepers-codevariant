@@ -1,0 +1,163 @@
+/* Responsive hardening for phones, tablets, and narrow desktop windows.
+   Kept separate from globals.css so the original visual system stays intact. */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1rem;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img, video, canvas, iframe, svg {
+  max-width: 100%;
+}
+
+img, video {
+  height: auto;
+}
+
+button, input, select, textarea {
+  max-width: 100%;
+  font: inherit;
+}
+
+input, select, textarea {
+  min-width: 0;
+}
+
+pre, code {
+  overflow-wrap: anywhere;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  max-width: 100%;
+}
+
+main, main > *, main section, main article, main form {
+  min-width: 0;
+  max-width: 100%;
+}
+
+main :is(.flex, [class*="flex-"]) > * {
+  min-width: 0;
+}
+
+main :is(h1, h2, h3, h4, p, a, button, label) {
+  overflow-wrap: anywhere;
+}
+
+main :is(.grid, [class*="grid-cols-"]) {
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  main :is(.w-screen, .min-w-max) {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  html, body {
+    min-width: 320px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  /* Let the shell's search field shrink instead of pushing actions off-screen. */
+  header {
+    min-width: 0;
+    gap: 0.5rem;
+  }
+
+  header > * {
+    min-width: 0;
+  }
+
+  header input {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  main {
+    padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
+  }
+
+  main :is(.gap-8, .gap-10, .gap-12) {
+    gap: 1rem;
+  }
+
+  main :is(.px-8, .px-10, .px-12) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  main :is(.text-5xl, .text-6xl, .text-7xl, .text-8xl) {
+    font-size: clamp(2rem, 8vw, 3rem);
+    line-height: 1.08;
+  }
+
+  main :is(.hero, .hero-ev, .hero-kb) {
+    border-radius: 16px;
+  }
+
+  main :is(table, [role="table"]) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [role="dialog"], .card[class*="fixed"], .card[class*="absolute"] {
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  nav[aria-label="Mobile"] {
+    bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  main :is(.p-8, .p-10, .p-12) {
+    padding: 1rem;
+  }
+
+  main :is(.text-4xl, .text-5xl, .text-6xl, .text-7xl, .text-8xl) {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    line-height: 1.1;
+  }
+
+  main :is(.flex-row) {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+}

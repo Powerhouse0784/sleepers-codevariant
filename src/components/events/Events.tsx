@@ -11,6 +11,7 @@ import EventCard from "./EventCard";
 import { KeepAlive, RecentlyRevisited } from "./BuzzRail";
 import Hex from "./Hex";
 import Draggable from "../canvas/Draggable";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 import { EventDock, eventCard } from "./EventZones";
 
 const PAGE = 6;
@@ -52,7 +53,7 @@ export default function Events() {
       {wide ? <EventsHero onCreate={() => setCreateEvent(true)} onExplore={explore} /> : (
         <header className="flex items-start justify-between gap-3 pt-1">
           <div><h1 className="text-[26px] font-bold leading-tight">Events</h1><p className="mt-1 text-[13px] text-mute">Every event leaves something worth keeping.</p></div>
-          <button onClick={() => setCreateEvent(true)} className="btn-gold inline-flex shrink-0 items-center gap-1.5 px-4 py-2.5 text-[13px]"><Plus size={15} aria-hidden /> Create event</button>
+          <ActionIntentCard label="Create event" onExecute={() => setCreateEvent(true)} className="shrink-0 rounded-xl"><div className="btn-gold inline-flex items-center gap-1.5 px-4 py-2.5 text-[13px]"><Plus size={15} aria-hidden /> Create event</div></ActionIntentCard>
         </header>)}
 
       {wide && (
@@ -94,7 +95,7 @@ export default function Events() {
               <SearchX size={30} className="text-mute" aria-hidden />
               <p className="text-[15px] font-semibold">{q ? `Nothing matches “${q}”` : `No ${FILTER_LABEL[filter].toLowerCase()} yet`}</p>
               <p className="max-w-xs text-[13px] text-mute">{filter === "archived" ? "Archived events live here so your main list stays focused." : "Try a different filter, or start a new event to capture from."}</p>
-              <div className="flex gap-2"><button onClick={reset} className="btn-blue px-4 py-2 text-[13px]">Clear filters</button><button onClick={() => setCreateEvent(true)} className="btn-gold px-4 py-2 text-[13px]">Create event</button></div>
+              <div className="flex gap-2"><button onClick={reset} className="btn-blue px-4 py-2 text-[13px]">Clear filters</button><ActionIntentCard label="Create event" onExecute={() => setCreateEvent(true)}><div className="btn-gold rounded-xl px-4 py-2 text-center text-[13px]">Create event</div></ActionIntentCard></div>
             </div>
           ) : (
             <motion.ul layout className={`mt-3 grid gap-3 ${layout === "grid" ? "grid-cols-3" : view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>

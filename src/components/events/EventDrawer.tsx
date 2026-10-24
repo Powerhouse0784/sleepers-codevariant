@@ -62,8 +62,7 @@ export default function EventDrawer() {
                     <li key={c.id}><Draggable label={c.title} payload={() => hiveCellCard(c)} className="w-full"><div className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/5"><I size={16} className="shrink-0 text-mute" aria-hidden /><span className="min-w-0 flex-1 truncate text-[13px]">{c.title}</span>{!c.done && <MomentumBadge state={getMomentum(c, now).state} />}{c.done && <span className="text-[11px] text-[#1FBF8F]">Done</span>}<span className="text-[10px] text-mute/70">Drag</span></div></Draggable></li>); })}
                 </ul>)}
 
-              <button onClick={() => { setEventArchived(e.id, status !== "archived", Date.now()); if (status !== "archived") close(); }} className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm hover:bg-white/5">
-                {status === "archived" ? <ArchiveRestore size={16} aria-hidden /> : <Archive size={16} aria-hidden />} {status === "archived" ? "Restore event" : "Archive event"}</button>
+              <ActionIntentCard label={status === "archived" ? "Restore event" : "Archive event"} hint={status === "archived" ? "Restore this event" : "Archive this event"} onExecute={() => { setEventArchived(e.id, status !== "archived", Date.now()); if (status !== "archived") close(); }} className="mt-6"><div className="inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm">{status === "archived" ? <ArchiveRestore size={16} aria-hidden /> : <Archive size={16} aria-hidden />} {status === "archived" ? "Restore event" : "Archive event"}</div></ActionIntentCard>
             </div>
           </motion.aside>
         </>)}

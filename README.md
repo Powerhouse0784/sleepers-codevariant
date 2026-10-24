@@ -1,79 +1,265 @@
-# Event Bee Buzz
-```
+<div align="center">
+
+# 🐝 Event Bee Buzz
+
+**Keep the buzz going after the event.**
+
+Turn the ideas, people and promises from every event into momentum, before they go cold.
+
+[**Live demo**](https://sleepers-codevariant.vercel.app/) · [**Repository**](https://github.com/Powerhouse0784/sleepers-codevariant)
+
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)
+![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?logo=vercel)
+
+</div>
+
+---
+
+## Overview
+
+Most of the value of an event happens after it ends: the idea you sketched, the person you promised to email, the action you meant to take. It usually fades within days.
+
+**Event Bee Buzz** is a frontend-first product built for hackathon problem statement **PS 04 – "After the Event"**. It keeps those follow-ups visible and alive through a **momentum hive**: every idea, person and action is a hexagon whose state (hot, warm, cooling, cold) is derived from your own deliberate activity. It is not a to-do list that nags you.
+
+> **Team Sleepers**: Sushant Kumar Suman · Saqib Nadeem · Vivek Kumar
+
+## Highlights
+
+- **Momentum Hive.** One pure, tested function decides whether something is hot, warm, cooling or cold. Only deliberate actions (a note, a follow-up, a completion) count; passive views never do.
+- **Nine connected screens.** Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base and Settings share one design system, in light and dark themes.
+- **Derived, not stored.** Event status, counts, progress, rankings, XP and levels are all computed from source data, so they cannot drift out of sync.
+- **Canvas Protocol.** Primary actions (submit, save, delete, like, move, post) are performed by dragging a card onto an Action Zone, with full mouse, touch and keyboard support.
+- **A shared motion layer.** Page transitions, scroll-reveal cards, a pointer spotlight, magnetic buttons and an animated backdrop, switched off automatically for reduced motion and Calm mode.
+- **Rule-based insights.** Insights and Bee Buddy tips come from transparent rules, not an AI service.
+- **Accessible by default.** Dialogs close with Esc, filters expose `aria-pressed`, status is never conveyed by colour alone, and Calm mode removes motion.
+
+## Screens
+
+| Route | Screen | What it does |
+| --- | --- | --- |
+| `/` | **Daily Buzz** | Greeting, momentum meter, Bee Buddy tips and today's priorities |
+| `/events` | **Events** | Event spaces with status, progress, follow-ups, create and archive |
+| `/hive` | **Momentum Hive** | Hexagon view of every idea, person and action by momentum state |
+| `/ideas` | **Ideas** | Shared idea feed, rankings, your stats and a share flow |
+| `/people` | **People** | Community directory, follows, top contributors and your profile |
+| `/actions` | **Action Center** | Events and challenges to join, with XP, levels and a live activity feed |
+| `/calendar` | **Calendar** | Month, week and day views built from your real data |
+| `/knowledge` | **Knowledge Base** | Searchable guides, categories, reader, FAQ and support |
+| `/settings` | **Settings** | Profile, notifications, privacy, appearance, data export and wipe |
+
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 15 (App Router), React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4, CSS variables for theming (`data-theme="dark\|light"`) |
+| Motion | Motion (`motion/react`), CSS scroll-driven animations |
+| 3D | React Three Fiber |
+| State | Zustand with `persist` (browser `localStorage`) |
+| Icons | Lucide React |
+
+## Getting started
+
+**Requirements:** Node.js 18.18 or newer.
+
+```bash
 npm install
-npm run dev                 # http://localhost:3000
-npm run build && npm start  # production build: use this for demos
-npm run test:momentum
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # production build, use this for demos
 ```
-Shortcuts: Ctrl/Cmd+K command palette. On /hive: 1-4 filter state, 0 clear, O/C/L views, / search, T watch it cool, R review, ? help.
-Data is browser localStorage plus labelled sample data. Untouched sample data re-anchors to "now" every 6 hours; "Reset sample data" lives in the Time travel menu.
-Momentum rules: src/features/momentum/momentum.ts. Hive stats: src/features/hive/stats.ts. Insights and Bee Buddy tips are rule-based, not AI.
 
-## Events screen (`/events`)
-- `src/components/events/*`: `Events` (page), `EventsHero`, `EventCard`, `BuzzRail` (Keep the buzz alive + Recently revisited), `EventDrawer`, `CreateEventDialog`, `EventCover` (illustrated covers), `Hex`.
-- `src/features/events/events.ts` derives status (upcoming/active/past/archived), counts and progress from dates and cells. Nothing derived is stored.
-- Sample events carry a `sample` baseline so they look lived-in; anything you capture adds on top. Storage key is `ebb:v3`, so older local data reseeds once.
-- `/hive?state=hot|warm|cooling|cold` preselects that filter.
+### Tests
 
-## Ideas screen (`/ideas`)
-- `src/components/ideas/*`: `Ideas` (page), `IdeasHero`, `IdeaCard`, `IdeaCover` (one illustrated cover per category, plus pills and avatars), `Rail` (Top Ideas, Your Idea Stats, motivation panel, "View All" ranking), `IdeaDrawer` and `ShareIdeaDialog` (both mounted in the Shell so they open from anywhere).
-- `src/features/ideas/ideas.ts` holds the types, sample feed and every derived value. Hot/Trending badges, the Top Ideas ranking and your stats are computed from the ideas, never stored.
-- `src/lib/ideasStore.ts` is a separate persisted store (`ebb:ideas:v1`), so it never touches your events and hive data. Same rule as the hive: untouched sample data re-anchors every 6 hours; "Reset sample data" resets both.
-- Your stats are tiles you can tap: Total (incl. drafts), Shared, In Progress, Gained Support (25+ likes) filter the feed to your own ideas.
-- On `/ideas` the top bar search filters the feed. Elsewhere it searches events and hive items as before.
-- `public/ideas/*.webp` are crops of the supplied mockup (hero bee scene, promo bee). `public/decor/honeycomb.svg` is from the asset pack.
-- `npm run test:ideas`
+The domain logic is plain functions with their own tests.
 
-## People screen (`/people`)
-- `src/components/people/*`: `People` (page), `PeopleHero`, `PersonCard`, `PersonBits` (avatar, status, Follow button), `PeopleRail` (Community Stats, Top Contributors + "View All", "Find Your Tribe"), `JoinStrip`, `PersonDrawer`, `ProfileDialog` ("Join Now" / "Edit profile").
-- `src/features/people/people.ts`: types, the 12-person sample directory, and every derived value. "Popular" sorts by points, which is also what ranks Top Contributors. Follower counts are the sample base plus your own follow.
-- `src/lib/peopleStore.ts`: its own persisted store (`ebb:people:v1`, only follows and your own profile). "Reset sample data" resets it too.
-- Tabs: All People, Students, Creators, Mentors, Experts, Teams, Followed. Role and Skill dropdowns are built from the directory. The top bar search and the in-page search share one query.
-- Community Stats (10.2K / 2.6K / 480 / 98%) are labelled sample numbers; joining adds you on top.
-- `public/people/*.webp` are crops of the supplied mockup (hero, promo and join-strip bees, cleaned avatars). The first eight people use the supplied avatars; the rest show initials.
-- This is separate from the people you capture at events (the hive's person cells). `npm run test:people`.
+```bash
+npm run test:momentum
+npm run test:ideas
+npm run test:people
+npm run test:actions
+npm run test:calendar
+npm run test:settings
+```
 
-## Action Center screen (`/actions`)
-- `src/components/actions/*`: `ActionCenter` (page: hero, four quick-action cards, Featured Action Opportunities, community banner) and `ActionRail` (Your Progress, Live Community Activity, promo card, plus the "View Details" and "View All" dialogs).
-- `src/features/actions/actions.ts`: the 8 sample opportunities (4 featured, 4 behind "View All"), XP/level rules and the activity feed. XP, level, counts, participant totals and "x min ago" are derived from what you joined, never stored. Dates are built from today, so they never go stale. `npm run test:actions` (add `"test:actions": "node --experimental-strip-types src/features/actions/actions.test.ts"` to package.json scripts).
-- `src/lib/actionsStore.ts`: its own persisted store (`ebb:actions:v1`, only what you joined or completed) plus screen state (search, filter, expanded). "Reset sample data" resets it too.
-- Live behaviour: Join Event / Join Challenge update XP, participants, the progress panel and the activity feed instantly. Joined challenges get "Mark Complete" (+150 XP). Level-ups toast and burst confetti. Submit Idea opens the shared Share Idea dialog. Find Teams opens People on the Teams tab. "Ideas Shared" is your real count from the Ideas store.
-- Top bar search on `/actions` filters the opportunities. "Explore Challenges" / "Join a Challenge" filter to challenges and scroll to them.
-- `public/action/*.webp` are crops of the supplied mockup (hero bee scene, promo bee, join-banner bees, four featured photos, avatars). Photos are low-res upscales, so swap in originals when you have them. The profile photo now also shows in the sidebar and top bar on every screen.
+## Keyboard shortcuts
 
-## Calendar screen (`/calendar`)
-- `src/components/calendar/*`: `Calendar` (page: hero, Month / Week / Day views with prev / next / Today, "Missed something?" banner) and `CalendarRail` (Today, Upcoming Events, Quick Actions, "Make It Happen!" promo, plus the item, "View All" and "View Past Events" dialogs).
-- `src/features/calendar/calendar.ts`: builds every entry from live data and derives the rest. Sources: your events (multi-day events show on each day as All Day), action cells with a due date (not done or archived), opportunities you joined in the Action Center, and a labelled sample schedule laid over last, this and next month so the demo always looks lived-in. A real event with the same title on the same day replaces its sample twin. Nothing is stored. `npm run test:calendar`.
-- `src/lib/calendarStore.ts`: screen state only (view, date cursor, search, open dialogs). Opens on today, and follows the Time travel slider.
-- Behaviour: tap a day for its Day view, "+N more" for overflow, any entry for details. Events open the event drawer, due dates open the item, joined items open the Action Center, and sample entries offer "Add to my events". Quick Actions: Add Event opens the Create event dialog, Join Challenge opens the Action Center on challenges, Create Idea opens Share Idea. Top bar search filters the grid. On phones the month grid shows coloured dots and the Day view carries the detail.
-- `public/calendar/*.webp` are crops of the supplied mockup (hero bee scene, promo bee, city strip, Today bee). Text and buttons are rebuilt as live components.
+| Keys | Where | Action |
+| --- | --- | --- |
+| `Ctrl` / `⌘` + `K` | Anywhere | Open the command palette |
+| `1`–`4` | `/hive` | Filter by state (hot, warm, cooling, cold) |
+| `0` | `/hive` | Clear filters |
+| `O` `C` `L` | `/hive` | Overview, Cells and List views |
+| `/` | `/hive` | Focus search |
+| `T` | `/hive` | Watch it cool (time-lapse) |
+| `R` | `/hive` | Review mode |
+| `?` | `/hive` | Help |
 
+## Canvas Protocol
+
+For the mid-hackathon challenge, primary actions are done **only by dragging a data card onto an Action Zone**. No standard button executes them.
+
+| Input | How it works |
+| --- | --- |
+| Mouse and pen | Drag the card onto a zone |
+| Touch | Press and hold, then drag (scrolling still works) |
+| Keyboard | Focus a card, `Space` or `Enter` to lift, arrow keys or `Tab` to pick a zone, `Enter` to drop, `Esc` to cancel |
+
+The engine is shared and each screen declares its own zones and rules:
+
+- `src/lib/canvas.ts`: store, zone registry and `commitDrag`
+- `src/components/canvas/`: `Draggable`, `ActionZone` and `DragLayer` (floating card, keyboard dragging, screen-reader announcements)
+- `src/features/<screen>/canvas.ts`: plain, tested rules for what each zone accepts
+
+**Status:** Ideas is complete (Support, Discuss, Just an idea, In progress, Done, Publish, Save draft, Bin, Post comment). Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base and Daily Buzz are still to be converted.
+
+## How it works
+
+### Momentum
+
+Every item has a `lastMeaningfulActivityAt` timestamp. `getMomentum()` turns the time since then into a state using fixed thresholds:
+
+| State | Time since last meaningful activity |
+| --- | --- |
+| Hot | up to 72 hours |
+| Warm | up to 168 hours (7 days) |
+| Cooling | up to 720 hours (30 days) |
+| Cold | longer than that |
+
+Only deliberate actions move the timestamp. The rules live in `src/features/momentum/momentum.ts`, with edge-case tests.
+
+### Data
+
+- There is **no backend**. Data lives in browser `localStorage`, alongside clearly labelled sample data.
+- Each area has its own persisted store, so one never overwrites another:
+
+| Store | Key |
+| --- | --- |
+| Events and hive | `ebb:v3` |
+| Ideas | `ebb:ideas:v1` |
+| People | `ebb:people:v1` |
+| Action Center | `ebb:actions:v1` |
+| Knowledge Base | `ebb:kb:v1` |
+| Settings | `ebb:settings:v1` |
+
+- Untouched sample data **re-anchors to "now" every 6 hours**, so the demo always looks alive. **Reset sample data** lives in the *Time travel* menu and the command palette.
+- Derived values (status, counts, progress, XP, rankings, follow-ups) are never stored.
+
+## Project structure
+
+```
+src/
+├── app/                 # App Router routes, global styles, page template
+├── components/          # Shell, motion layer (Fx), shared UI
+│   ├── events/  hive/  ideas/  people/  actions/
+│   ├── calendar/  knowledge/  settings/  canvas/  dashboard/
+├── features/            # Pure domain logic and tests, per screen
+│   └── momentum/  hive/  events/  ideas/  people/  actions/  calendar/  knowledge/  settings/
+├── lib/                 # Zustand stores, seed data, canvas engine, hooks
+└── types/               # Shared types
+public/                  # Image assets and decor
+```
+
+## Screen notes
+
+<details>
+<summary><b>Events</b> (<code>/events</code>)</summary>
+
+- Status (upcoming, active, past, archived), counts and progress are derived from dates and cells.
+- Sample events carry a baseline so they look lived-in; anything you capture adds on top.
+- `/hive?state=hot|warm|cooling|cold` preselects a hive filter.
+- Covers are illustrated SVGs, one scene per event type.
+</details>
+
+<details>
+<summary><b>Ideas</b> (<code>/ideas</code>)</summary>
+
+- Hot and Trending badges, Top Ideas and your stats are computed from the ideas.
+- Your stat tiles filter the feed to your own ideas (Total, Shared, In Progress, Gained Support).
+- On this screen the top-bar search filters the feed.
+</details>
+
+<details>
+<summary><b>People</b> (<code>/people</code>)</summary>
+
+- Twelve-person sample directory; "Popular" sorts by points, which also ranks Top Contributors.
+- Tabs: All People, Students, Creators, Mentors, Experts, Teams, Followed.
+- Community Stats are labelled sample numbers; joining adds you on top.
+- Separate from the people you capture at events (the hive's person cells).
+</details>
+
+<details>
+<summary><b>Action Center</b> (<code>/actions</code>)</summary>
+
+- Eight sample opportunities (four featured, four behind "View All"), with dates built from today.
+- XP, level, participants and the activity feed update instantly when you join or complete something. Level-ups toast and burst confetti.
+- "Ideas Shared" is your real count from the Ideas store.
+</details>
+
+<details>
+<summary><b>Calendar</b> (<code>/calendar</code>)</summary>
+
+- Entries are built from your events (multi-day events show on each day), dated action cells, joined opportunities and a labelled sample schedule. Nothing is stored.
+- Opens on today and follows the Time travel slider. Events open the event drawer; sample entries offer "Add to my events".
+- On phones the month grid shows coloured dots and the Day view carries the detail.
+</details>
+
+<details>
+<summary><b>Knowledge Base</b> (<code>/knowledge</code>)</summary>
+
+- 78 articles across six categories, with weighted search (title, summary, category, steps).
+- Reader with steps, helpful votes and related articles; FAQ and User Guide modes.
+- Views and votes persist. Video tutorials are marked "coming soon" and Support opens a pre-filled email.
+</details>
+
+<details>
+<summary><b>Settings</b> (<code>/settings</code>)</summary>
+
+- Profile changes flow through the sidebar, greeting, Ideas feed and People entry.
+- Notification switches decide what the bell lists. Privacy can export all data as JSON or wipe everything.
+- Social links accept a handle or URL and reject anything unsafe. They start empty on purpose.
+</details>
 
 ## Motion layer
-One shared layer (`src/components/Fx.tsx`, `src/app/template.tsx` and the "Motion layer" block in `globals.css`) gives every screen the same feel:
-- Page transitions on every route change, a scroll progress bar and a slow aurora backdrop with a light that trails the cursor.
-- Cards rise in as they appear and again as they scroll into view, then follow the pointer with a soft spotlight and lift on hover.
-- Hero banners catch the light under the pointer; gold buttons shine and are pulled slightly toward the cursor; the sidebar indicator slides between screens.
-- Counters, headline shine and the notification pulse are included.
-All of it is skipped on touch devices, with `prefers-reduced-motion`, and in Calm mode.
 
-## Settings screen (`/settings`)
-- `src/components/settings/*`: `Settings` (page: hero, section nav, Account view with Profile Information, Social Links, Notification Preferences and Quick Settings, plus the shared progress / community / promo rail and join banner), `SettingsPanels` (Notifications, Privacy, Appearance, App Preferences, Security, Connected Accounts, Help & Support), `SettingsDialogs` (edit profile, edit link, default view, language, delete everything) and `util.ts` (export, storage stats, wipe).
-- `src/features/settings/settings.ts`: link cleaning (GitHub, LinkedIn, X and portfolio accept a handle or a URL and reject anything unsafe), the device time zone label, settings search, and the bell's notification list. `npm run test:settings`.
-- `src/lib/settingsStore.ts`: its own persisted store (`ebb:settings:v1`: profile, links, notification switches, reminder lead time, default view). Everything is cleaned again on load. Screen state is separate and not saved.
-- What each control really does: Edit Profile changes the sidebar name and headline, the greeting name, and your People entry if you joined. Notification switches and the reminder lead time decide what the bell lists (events starting soon or live, challenges you joined, latest community activity, platform news). Theme and Calm mode are the same switches as the top bar. Default View opens that screen once per browser session when the app is launched on the home screen. Privacy can remove you from or send you to join the People directory, export all saved data as JSON, or wipe everything and restart. Replay the tour restarts it on the hive. The top bar search on this screen jumps to the matching section.
-- Honest limits: there are no accounts or servers, so Security shows what is stored on the device instead of 2FA. Language has only English (US). Time zone follows the device. Mentorship alerts are saved but nothing sends them yet. Social links start empty so nobody gets linked to an account that is not theirs.
-- `public/settings/hero-bee.webp` is cropped from the supplied mockup; text, toggles and buttons are rebuilt as live components.
+A single shared layer (`src/components/Fx.tsx`, `src/app/template.tsx` and the "Motion layer" block in `globals.css`) gives every screen the same feel:
 
-## Review fixes
-- Ideas and People now read your full name from Settings (`profile.name`), so renaming yourself there renames you in the Ideas feed, comments and the People directory. Before, they appended a fixed surname to the first name.
-- The command palette's "Reset sample data" now also resets the Action Center, like the top-bar reset does.
-- Phones: the bottom bar's last slot is now **More**, a sheet listing Momentum Hive, People, Action Center, Calendar, Knowledge Base and Settings. Below 1024px the sidebar is hidden, so these screens had no way in.
+- Page transitions on every route change, a scroll progress bar and a slow animated backdrop with a light that trails the cursor.
+- Cards rise in as they appear and as they scroll into view, then follow the pointer with a soft spotlight.
+- Hero banners catch the light; gold buttons shine and lean toward the cursor; the sidebar indicator slides between screens.
 
-## Canvas Protocol (mid-hackathon challenge)
-Primary actions (submit, save, delete, like, move, post) are done only by dragging a data card onto an Action Zone. No standard buttons execute them. Done screen by screen, on one shared engine:
-- `src/lib/canvas.ts` (store, zone registry, `commitDrag`), `src/components/canvas/Draggable.tsx` (any card becomes draggable), `ActionZone.tsx` (drop targets that light up, grow, or explain a refusal) and `DragLayer.tsx` (the floating card, keyboard dragging and screen-reader announcements). Mounted once in the Shell.
-- Mouse and pen: drag. Touch: press and hold, then drag (scrolling still works). Keyboard: focus a card, Space or Enter to lift, arrow keys or Tab to pick a zone, Enter to drop, Esc to cancel.
-- Each screen declares its zones and the rules for what each accepts. The rules are plain functions with tests (`src/features/<screen>/canvas.ts`).
-- **Ideas (done):** zones Support, Discuss, Just an idea, In progress, Done, Publish, Save draft, Bin and Post comment. A new idea is a note you write on and drag onto Publish or Save draft; a comment is a note you drag onto Post. "Start an idea" from any screen takes you to the note.
-- Still to convert: Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base, Daily Buzz.
+It is skipped on touch devices, with `prefers-reduced-motion`, and in **Calm mode**.
+
+## Honest limits
+
+This is a frontend build, and we would rather be clear about its edges:
+
+- No accounts or servers. Security shows what is stored on the device instead of 2FA.
+- Language is English (US) only; time zone follows the device.
+- Mentorship alerts are saved but nothing sends them yet.
+- Several images are crops of design mockups and are low-resolution upscales. Swap in originals for production.
+- Community numbers, the sample directory and the sample schedule are labelled sample data.
+
+## Roadmap
+
+- [ ] Convert the remaining screens to the Canvas Protocol (Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base, Daily Buzz)
+- [ ] Real backend and authentication
+- [ ] Real notifications for mentorship and reminders
+- [ ] Video tutorials for the Knowledge Base
+- [ ] Production photography for event and idea covers
+
+## Team
+
+**Sleepers**, building for PS 04 "After the Event":
+
+- Sushant Kumar Suman
+- Saqib Nadeem
+- Vivek Kumar
+
+## Links
+
+- **Live:** https://sleepers-codevariant.vercel.app/
+- **Source:** https://github.com/Powerhouse0784/sleepers-codevariant

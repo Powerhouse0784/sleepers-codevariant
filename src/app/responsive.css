@@ -161,3 +161,184 @@ main :is(.grid, [class*="grid-cols-"]) {
     scroll-behavior: auto;
   }
 }
+
+/* Mobile header: give the search its own full-width row instead of squeezing it
+   between the logo and five utility actions. */
+@media (max-width: 767px) {
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0.65rem;
+  }
+
+  header > a {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  /* Search wrapper is the first direct div in the header. */
+  header > div.relative {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  header > div.ml-auto {
+    order: 2;
+    flex: 0 0 auto;
+    margin-left: auto;
+    gap: 0.15rem;
+  }
+
+  header > div.relative > input,
+  header > div.relative input {
+    width: 100%;
+    min-height: 44px;
+    padding-right: 0.85rem;
+    border-radius: 14px;
+  }
+
+  header > div.relative > svg {
+    left: 0.85rem;
+  }
+}
+
+@media (max-width: 380px) {
+  header > div.ml-auto {
+    gap: 0;
+  }
+
+  header > div.ml-auto > button,
+  header > div.ml-auto > div > button {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+  }
+
+  header > div.ml-auto > span {
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+  }
+}
+
+
+/* Hero/header artwork: keep the illustration inside the banner, behind the
+   copy, and sized to the available space on smaller screens. */
+@media (max-width: 767px) {
+  main section > img[src*="/hero-bee.webp"] {
+    width: clamp(120px, 38%, 210px) !important;
+    max-width: 46% !important;
+    height: 100% !important;
+    object-fit: contain;
+    object-position: right bottom;
+    opacity: 0.28 !important;
+  }
+
+  main section[aria-labelledby="ideas-hero"] > div.relative.z-10,
+  main section[aria-labelledby="people-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10,
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="cal-hero"] > div.relative.z-10 {
+    max-width: 100%;
+    padding-right: 1.25rem;
+  }
+
+  main section[aria-labelledby="ideas-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="people-hero"] > img[src*="/hero-bee.webp"] {
+    width: 42% !important;
+    max-width: 42% !important;
+    opacity: 0.2 !important;
+  }
+
+  main section[aria-labelledby="events-hero"] {
+    min-height: 230px;
+    padding: 1.15rem;
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10 {
+    max-width: 78%;
+  }
+
+  main section[aria-labelledby="events-hero"] h1 {
+    font-size: clamp(1.8rem, 7.5vw, 2.4rem);
+    overflow-wrap: normal;
+  }
+
+  main section[aria-labelledby="events-hero"] > .poster,
+  main section[aria-labelledby="events-hero"] > button,
+  main section[aria-labelledby="events-hero"] > svg.drift {
+    display: none !important;
+  }
+
+  main section[aria-labelledby="greet"] > div.relative.z-10 {
+    max-width: 76%;
+  }
+
+  main section[aria-labelledby="greet"] > button {
+    width: 28%;
+    max-width: 150px;
+    right: 0.25rem;
+    opacity: 0.88;
+  }
+
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10 {
+    max-width: 78%;
+  }
+
+  main section[aria-labelledby="action-hero"] h1,
+  main section[aria-labelledby="settings-hero"] h1,
+  main section[aria-labelledby="cal-hero"] h1 {
+    font-size: clamp(1.7rem, 7vw, 2.25rem);
+    overflow-wrap: normal;
+  }
+
+  main section[aria-labelledby="cal-hero"] > img[src*="/hero-bee.webp"] {
+    width: 35% !important;
+    max-width: 38% !important;
+    opacity: 0.22 !important;
+  }
+
+  main section.hero-kb > div.relative.z-10 {
+    max-width: 100%;
+  }
+
+  main section.hero-kb h1 {
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+  }
+
+  main section.hero-kb form[role="search"] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  main section.hero-kb form[role="search"] input {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  main section[aria-labelledby="ideas-hero"] > div.relative.z-10,
+  main section[aria-labelledby="people-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10,
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="cal-hero"] > div.relative.z-10 {
+    padding: 1rem;
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10,
+  main section[aria-labelledby="greet"] > div.relative.z-10 {
+    max-width: 100%;
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10 {
+    padding: 0.5rem 0;
+  }
+
+  main section[aria-labelledby="greet"] > button {
+    opacity: 0.2;
+  }
+}

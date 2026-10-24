@@ -43,7 +43,7 @@ export function ActionIntentDock() {
   const holding = useCanvas((s) => !!s.drag);
   if (!holding || !isIntent(useCanvas.getState().drag!.payload)) return null;
   return (
-    <div role="region" aria-label="Canvas Protocol execute zone" className="fixed inset-x-3 bottom-[88px] z-[35] lg:inset-x-6 lg:bottom-4">
+    <div role="region" aria-label="Canvas Protocol execute zone" className="fixed inset-x-3 bottom-[88px] z-[70] lg:inset-x-6 lg:bottom-4">
       <div className="card mx-auto flex w-fit max-w-full items-center gap-3 rounded-3xl! border-[color-mix(in_srgb,var(--gold)_45%,var(--line))] p-2.5 shadow-2xl backdrop-blur">
         <ActionZone def={executeZone} Icon={CheckCircle2} variant="dock" className="min-w-[104px]" />
       </div>

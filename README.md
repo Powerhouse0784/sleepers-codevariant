@@ -1,18 +1,18 @@
 <div align="center">
 
-# 🐝 Event Bee Buzz
+# Event Bee Buzz
 
-**Keep the buzz going after the event.**
+### Keep the momentum going after every event.
 
-Turn the ideas, people and promises from every event into momentum, before they go cold.
+Turn the ideas, people, and promises you collect at events into meaningful next steps—before they go cold.
 
-[**Live demo**](https://sleepers-codevariant.vercel.app/) · [**Repository**](https://github.com/Powerhouse0784/sleepers-codevariant)
+[**Live Application**](https://sleepers-codevariant.vercel.app/) · [**Video Demo**](https://drive.google.com/file/d/1AL5ABFn-K18PZ4bw9WDCUGTAZ-Q4SGYc/view?usp=drivesdk) · [**Source Code**](https://github.com/Powerhouse0784/sleepers-codevariant)
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)
-![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?logo=vercel)
+![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)
+![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel&logoColor=white)
 
 </div>
 
@@ -20,61 +20,103 @@ Turn the ideas, people and promises from every event into momentum, before they 
 
 ## Overview
 
-Most of the value of an event happens after it ends: the idea you sketched, the person you promised to email, the action you meant to take. It usually fades within days.
+The value of an event often comes from what happens afterward: following up with someone you met, developing an idea, sharing a resource, or completing a promise. Without a clear system, those opportunities can quickly be forgotten.
 
-**Event Bee Buzz** is a frontend-first product built for hackathon problem statement **PS 04 – "After the Event"**. It keeps those follow-ups visible and alive through a **momentum hive**: every idea, person and action is a hexagon whose state (hot, warm, cooling, cold) is derived from your own deliberate activity. It is not a to-do list that nags you.
+**Event Bee Buzz** is a frontend-first event follow-through experience created for hackathon problem statement **PS 04 — “After the Event.”** It brings event-related ideas, people, and actions into one workspace and uses a visual **Momentum Hive** to help users recognize what needs attention.
 
-> **Team Sleepers**: Sushant Kumar Suman · Saqib Nadeem · Vivek Kumar
+Rather than behaving like a conventional to-do list, the application emphasizes meaningful activity and the momentum of each item.
 
-## Highlights
+## Demo
 
-- **Momentum Hive.** One pure, tested function decides whether something is hot, warm, cooling or cold. Only deliberate actions (a note, a follow-up, a completion) count; passive views never do.
-- **Nine connected screens.** Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base and Settings share one design system, in light and dark themes.
-- **Derived, not stored.** Event status, counts, progress, rankings, XP and levels are all computed from source data, so they cannot drift out of sync.
-- **Canvas Protocol.** Primary data mutations and item-opening actions use draggable data/action cards and named Action Zones across Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base and Settings. Mouse, touch and keyboard dragging are supported. Secondary controls such as filters, tabs, modal close, and view selectors remain conventional controls.
-- **A shared motion layer.** Page transitions, scroll-reveal cards, a pointer spotlight, magnetic buttons and an animated backdrop, switched off automatically for reduced motion and Calm mode.
-- **Rule-based insights.** Insights and Bee Buddy tips come from transparent rules, not an AI service.
-- **Accessible by default.** Dialogs close with Esc, filters expose `aria-pressed`, status is never conveyed by colour alone, and Calm mode removes motion.
+- **Live application:** [sleepers-codevariant.vercel.app](https://sleepers-codevariant.vercel.app/)
+- **Video demonstration:** [Watch the Event Bee Buzz demo](https://drive.google.com/file/d/1AL5ABFn-K18PZ4bw9WDCUGTAZ-Q4SGYc/view?usp=drivesdk)
+- **GitHub repository:** [Powerhouse0784/sleepers-codevariant](https://github.com/Powerhouse0784/sleepers-codevariant)
 
-## Screens
+## Key Features
 
-| Route | Screen | What it does |
+- **Momentum Hive:** Visualizes ideas, people, and actions using four momentum states—Hot, Warm, Cooling, and Cold—based on the time since meaningful activity.
+- **Nine connected screens:** Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base, and Settings share a consistent interface and application state where applicable.
+- **Canvas Protocol:** Supports drag-and-drop interactions between data cards and named Action Zones. Keyboard and touch interactions are supported alongside mouse input.
+- **Event follow-through:** Capture event-related items, organize follow-ups, and review progress in context.
+- **Ideas and community:** Explore an idea feed, contributor information, profiles, and sample community opportunities.
+- **Calendar views:** Review relevant event and action information in month, week, and day layouts.
+- **Rule-based guidance:** Insights and Bee Buddy suggestions are generated from application rules; they do not depend on an external AI service.
+- **Personalization:** Includes light and dark themes, Calm mode, settings, and local data export/reset controls.
+- **Motion and interaction design:** Shared transitions and visual effects enhance the experience, with reduced-motion preferences and Calm mode respected.
+
+## Application Screens
+
+| Route | Screen | Purpose |
 | --- | --- | --- |
-| `/` | **Daily Buzz** | Greeting, momentum meter, Bee Buddy tips and today's priorities |
-| `/events` | **Events** | Event spaces with status, progress, follow-ups, create and archive |
-| `/hive` | **Momentum Hive** | Hexagon view of every idea, person and action by momentum state |
-| `/ideas` | **Ideas** | Shared idea feed, rankings, your stats and a share flow |
-| `/people` | **People** | Community directory, follows, top contributors and your profile |
-| `/actions` | **Action Center** | Events and challenges to join, with XP, levels and a live activity feed |
-| `/calendar` | **Calendar** | Month, week and day views built from your real data |
-| `/knowledge` | **Knowledge Base** | Searchable guides, categories, reader, FAQ and support |
-| `/settings` | **Settings** | Profile, notifications, privacy, appearance, data export and wipe |
+| `/` | **Daily Buzz** | Review momentum, suggested priorities, and daily activity. |
+| `/events` | **Events** | Create and manage event spaces, status, progress, and follow-ups. |
+| `/hive` | **Momentum Hive** | Explore ideas, people, and actions by momentum state. |
+| `/ideas` | **Ideas** | Browse, share, and track ideas and their activity. |
+| `/people` | **People** | Explore the sample community directory and manage follows/profile information. |
+| `/actions` | **Action Center** | Browse sample opportunities and track participation and progress. |
+| `/calendar` | **Calendar** | View events and relevant actions in month, week, or day layouts. |
+| `/knowledge` | **Knowledge Base** | Search guides, articles, FAQs, and support information. |
+| `/settings` | **Settings** | Manage profile, appearance, notification preferences, privacy, and local data. |
 
-## Tech stack
+## Technology Stack
 
-| Area | Choice |
+| Area | Technology |
 | --- | --- |
-| Framework | Next.js 15 (App Router), React 19 |
+| Framework and routing | Next.js 15 App Router |
+| UI library | React 19 |
 | Language | TypeScript |
-| Styling | Tailwind CSS v4, CSS variables for theming (`data-theme="dark\|light"`) |
-| Motion | Motion (`motion/react`), CSS scroll-driven animations |
-| 3D | React Three Fiber |
-| State | Zustand with `persist` (browser `localStorage`) |
+| Styling | Tailwind CSS v4 and CSS variables |
+| State management and persistence | Zustand with browser `localStorage` persistence |
+| Animation | Motion (`motion/react`) and CSS animations |
+| 3D visuals | Three.js and React Three Fiber |
 | Icons | Lucide React |
+| Deployment | Vercel |
 
-## Getting started
+## Getting Started
 
-**Requirements:** Node.js 18.18 or newer.
+### Prerequisites
+
+- Node.js 18.18 or later for the Next.js application.
+- npm.
+- A modern browser with JavaScript enabled.
+
+> The test scripts use Node's `--experimental-strip-types` option, so use a Node.js release that supports this option when running the test suite.
+
+### Installation
+
+1. Clone the repository and move into the project directory:
+
+   ```bash
+   git clone https://github.com/Powerhouse0784/sleepers-codevariant.git
+   cd sleepers-codevariant
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Production Build
+
+Create and run a production build locally:
 
 ```bash
-npm install
-npm run dev                  # http://localhost:3000
-npm run build && npm start   # production build, use this for demos
+npm run build
+npm start
 ```
 
-### Tests
+## Tests
 
-The domain logic is plain functions with their own tests.
+The project includes tests for key domain logic. Run the available test scripts individually:
 
 ```bash
 npm run test:momentum
@@ -85,181 +127,82 @@ npm run test:calendar
 npm run test:settings
 ```
 
-## Keyboard shortcuts
+## Interaction Model: Canvas Protocol
 
-| Keys | Where | Action |
-| --- | --- | --- |
-| `Ctrl` / `⌘` + `K` | Anywhere | Open the command palette |
-| `1`–`4` | `/hive` | Filter by state (hot, warm, cooling, cold) |
-| `0` | `/hive` | Clear filters |
-| `O` `C` `L` | `/hive` | Overview, Cells and List views |
-| `/` | `/hive` | Focus search |
-| `T` | `/hive` | Watch it cool (time-lapse) |
-| `R` | `/hive` | Review mode |
-| `?` | `/hive` | Help |
+The Canvas Protocol is the shared interaction pattern for primary data actions. Users drag a data card to a named Action Zone to invoke an allowed action. Mouse, touch, and keyboard interactions are supported; conventional controls remain in place for secondary tasks such as filters, tabs, view selection, and closing dialogs.
 
-## Canvas Protocol
+**Keyboard interaction:** Focus a card, press `Space` or `Enter` to pick it up, use the arrow keys or `Tab` to choose a zone, press `Enter` to drop, or press `Esc` to cancel.
 
-For the mid-hackathon challenge, primary actions are done **only by dragging a data card onto an Action Zone**. No standard button executes them.
+Implementation is organized around:
 
-| Input | How it works |
+- `src/lib/canvas.ts` — shared canvas state, zone registry, and drag commit logic.
+- `src/components/canvas/` — draggable cards, action zones, drag layer, and interaction announcements.
+- `src/features/<screen>/canvas.ts` — screen-specific rules for supported actions.
+
+## Momentum Model
+
+Each item records a `lastMeaningfulActivityAt` timestamp. The `getMomentum()` function derives its current state from the elapsed time since that activity.
+
+| State | Time since meaningful activity |
 | --- | --- |
-| Mouse and pen | Drag the card onto a zone |
-| Touch | Press and hold, then drag (scrolling still works) |
-| Keyboard | Focus a card, `Space` or `Enter` to lift, arrow keys or `Tab` to pick a zone, `Enter` to drop, `Esc` to cancel |
+| **Hot** | Up to 72 hours |
+| **Warm** | More than 72 hours, up to 7 days |
+| **Cooling** | More than 7 days, up to 30 days |
+| **Cold** | More than 30 days |
 
-The engine is shared and each screen declares its own zones and rules:
+Meaningful actions can refresh an item's timestamp; simply viewing an item does not. The thresholds and logic are implemented in `src/features/momentum/momentum.ts`.
 
-- `src/lib/canvas.ts`: store, zone registry and `commitDrag`
-- `src/components/canvas/`: `Draggable`, `ActionZone` and `DragLayer` (floating card, keyboard dragging, screen-reader announcements)
-- `src/features/<screen>/canvas.ts`: plain, tested rules for what each zone accepts
+## Data and Privacy
 
-**Status:** The core Canvas Protocol paths are now wired across all nine screens. Ideas uses Support, Discuss, stage changes, Publish, Save draft, Bin and Post comment zones. Event cards expose Open, Capture, Archive and Restore; People cards expose View Profile, Follow and Unfollow; opportunity cards expose Join, Complete, Leave and Submit Idea; calendar cards expose Open, Add to Events, Open Event and date-list zones; Hive cards expose Open and Archive. Forms that create or save primary data use drag-only action cards and a shared Execute zone. Some secondary navigation and preference controls intentionally remain click-based.
+Event Bee Buzz is currently a **frontend prototype**. It does not include a backend, user accounts, or cloud synchronization. Application data is persisted locally in the browser using Zustand and `localStorage`.
 
-## How it works
+- Different feature areas use separate local stores to reduce unintended overwrites.
+- Some screens include clearly labelled sample data to make the demonstration useful from the first visit.
+- Untouched sample data is re-anchored to the current time periodically so the demo remains representative.
+- Derived values such as momentum states, counts, progress, XP, and rankings are calculated from source data rather than stored independently.
+- Settings provide local data export and reset/wipe controls.
 
-### Momentum
+Because data is stored in the current browser, it does not automatically follow a user to another device or browser. Do not treat the prototype as a cloud-backed production service.
 
-Every item has a `lastMeaningfulActivityAt` timestamp. `getMomentum()` turns the time since then into a state using fixed thresholds:
+## Accessibility and Motion
 
-| State | Time since last meaningful activity |
-| --- | --- |
-| Hot | up to 72 hours |
-| Warm | up to 168 hours (7 days) |
-| Cooling | up to 720 hours (30 days) |
-| Cold | longer than that |
+The interface includes keyboard support for Canvas Protocol interactions, dialog dismissal with `Esc`, accessible state attributes for filters, and status indicators that do not rely on color alone. Shared motion effects are designed to respect `prefers-reduced-motion` and Calm mode; some effects are also disabled on touch-oriented devices.
 
-Only deliberate actions move the timestamp. The rules live in `src/features/momentum/momentum.ts`, with edge-case tests.
+## Project Structure
 
-### Data
-
-- There is **no backend**. Data lives in browser `localStorage`, alongside clearly labelled sample data.
-- Each area has its own persisted store, so one never overwrites another:
-
-| Store | Key |
-| --- | --- |
-| Events and hive | `ebb:v3` |
-| Ideas | `ebb:ideas:v1` |
-| People | `ebb:people:v1` |
-| Action Center | `ebb:actions:v1` |
-| Knowledge Base | `ebb:kb:v1` |
-| Settings | `ebb:settings:v1` |
-
-- Untouched sample data **re-anchors to "now" every 6 hours**, so the demo always looks alive. **Reset sample data** lives in the *Time travel* menu and the command palette.
-- Derived values (status, counts, progress, XP, rankings, follow-ups) are never stored.
-
-## Project structure
-
-```
+```text
 src/
-├── app/                 # App Router routes, global styles, page template
-├── components/          # Shell, motion layer (Fx), shared UI
-│   ├── events/  hive/  ideas/  people/  actions/
-│   ├── calendar/  knowledge/  settings/  canvas/  dashboard/
-├── features/            # Pure domain logic and tests, per screen
-│   └── momentum/  hive/  events/  ideas/  people/  actions/  calendar/  knowledge/  settings/
-├── lib/                 # Zustand stores, seed data, canvas engine, hooks
-└── types/               # Shared types
-public/                  # Image assets and decor
+├── app/          # App Router routes, global styles, and page template
+├── components/   # Shared UI, page components, motion, and Canvas Protocol
+├── features/     # Screen-specific domain logic and tests
+├── lib/          # Stores, seed data, canvas engine, and hooks
+└── types/        # Shared TypeScript types
+public/           # Image assets and decorative resources
 ```
 
-## Screen notes
+## Current Scope and Limitations
 
-<details>
-<summary><b>Events</b> (<code>/events</code>)</summary>
-
-- Status (upcoming, active, past, archived), counts and progress are derived from dates and cells.
-- Sample events carry a baseline so they look lived-in; anything you capture adds on top.
-- `/hive?state=hot|warm|cooling|cold` preselects a hive filter.
-- Covers are illustrated SVGs, one scene per event type.
-</details>
-
-<details>
-<summary><b>Ideas</b> (<code>/ideas</code>)</summary>
-
-- Hot and Trending badges, Top Ideas and your stats are computed from the ideas.
-- Your stat tiles filter the feed to your own ideas (Total, Shared, In Progress, Gained Support).
-- On this screen the top-bar search filters the feed.
-</details>
-
-<details>
-<summary><b>People</b> (<code>/people</code>)</summary>
-
-- Twelve-person sample directory; "Popular" sorts by points, which also ranks Top Contributors.
-- Tabs: All People, Students, Creators, Mentors, Experts, Teams, Followed.
-- Community Stats are labelled sample numbers; joining adds you on top.
-- Separate from the people you capture at events (the hive's person cells).
-</details>
-
-<details>
-<summary><b>Action Center</b> (<code>/actions</code>)</summary>
-
-- Eight sample opportunities (four featured, four behind "View All"), with dates built from today.
-- XP, level, participants and the activity feed update instantly when you join or complete something. Level-ups toast and burst confetti.
-- "Ideas Shared" is your real count from the Ideas store.
-</details>
-
-<details>
-<summary><b>Calendar</b> (<code>/calendar</code>)</summary>
-
-- Entries are built from your events (multi-day events show on each day), dated action cells, joined opportunities and a labelled sample schedule. Nothing is stored.
-- Opens on today and follows the Time travel slider. Events open the event drawer; sample entries offer "Add to my events".
-- On phones the month grid shows coloured dots and the Day view carries the detail.
-</details>
-
-<details>
-<summary><b>Knowledge Base</b> (<code>/knowledge</code>)</summary>
-
-- 78 articles across six categories, with weighted search (title, summary, category, steps).
-- Reader with steps, helpful votes and related articles; FAQ and User Guide modes.
-- Views and votes persist. Video tutorials are marked "coming soon" and Support opens a pre-filled email.
-</details>
-
-<details>
-<summary><b>Settings</b> (<code>/settings</code>)</summary>
-
-- Profile changes flow through the sidebar, greeting, Ideas feed and People entry.
-- Notification switches decide what the bell lists. Privacy can export all data as JSON or wipe everything.
-- Social links accept a handle or URL and reject anything unsafe. They start empty on purpose.
-</details>
-
-## Motion layer
-
-A single shared layer (`src/components/Fx.tsx`, `src/app/template.tsx` and the "Motion layer" block in `globals.css`) gives every screen the same feel:
-
-- Page transitions on every route change, a scroll progress bar and a slow animated backdrop with a light that trails the cursor.
-- Cards rise in as they appear and as they scroll into view, then follow the pointer with a soft spotlight.
-- Hero banners catch the light; gold buttons shine and lean toward the cursor; the sidebar indicator slides between screens.
-
-It is skipped on touch devices, with `prefers-reduced-motion`, and in **Calm mode**.
-
-## Honest limits
-
-This is a frontend build, and we would rather be clear about its edges:
-
-- No accounts or servers. Security shows what is stored on the device instead of 2FA.
-- Language is English (US) only; time zone follows the device.
-- Mentorship alerts are saved but nothing sends them yet.
-- Several images are crops of design mockups and are low-resolution upscales. Swap in originals for production.
-- Community numbers, the sample directory and the sample schedule are labelled sample data.
-
-## Roadmap
-
-- [ ] Convert the remaining screens to the Canvas Protocol (Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base, Daily Buzz)
-- [ ] Real backend and authentication
-- [ ] Real notifications for mentorship and reminders
-- [ ] Video tutorials for the Knowledge Base
-- [ ] Production photography for event and idea covers
+- The application is frontend-only; authentication, backend persistence, and cross-device synchronization are not implemented.
+- Notification settings affect the in-app experience, but scheduled external notifications are not sent.
+- Some community, opportunity, and schedule content is sample data for demonstration purposes.
+- The interface currently supports English (US), with time-zone behavior based on the user's device.
+- Some visual assets may need replacement with original, high-resolution artwork before a production release.
+- Knowledge Base video tutorials are not yet available; the interface identifies them as coming soon.
 
 ## Team
 
-**Sleepers**, building for PS 04 "After the Event":
+**Team Sleepers** — Hackathon problem statement **PS 04: “After the Event”**
 
 - Sushant Kumar Suman
 - Saqib Nadeem
 - Vivek Kumar
 
-## Links
+---
 
-- **Live:** https://sleepers-codevariant.vercel.app/
-- **Source:** https://github.com/Powerhouse0784/sleepers-codevariant
+<div align="center">
+
+**Event Bee Buzz** · Keep the buzz going after the event.
+
+[Live Application](https://sleepers-codevariant.vercel.app/) · [Video Demo](https://drive.google.com/file/d/1AL5ABFn-K18PZ4bw9WDCUGTAZ-Q4SGYc/view?usp=drivesdk) · [GitHub Repository](https://github.com/Powerhouse0784/sleepers-codevariant)
+
+</div>

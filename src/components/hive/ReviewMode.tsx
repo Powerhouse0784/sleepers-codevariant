@@ -6,6 +6,7 @@ import { getMomentum } from "@/features/momentum/momentum";
 import type { Cell } from "@/types";
 import MomentumBadge from "../MomentumBadge";
 import { useStore, useUI } from "@/lib/store";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 /** Review cooling and cold items one at a time: revive with a next step, archive, or skip. */
 export default function ReviewMode({ queue, now, onClose }: { queue: Cell[]; now: number; onClose: () => void }) {
@@ -27,10 +28,10 @@ export default function ReviewMode({ queue, now, onClose }: { queue: Cell[]; now
             <p className="mt-2 text-sm text-mute">{m!.reason} {m!.suggestedAction}</p>
             {c.note && <p className="mt-3 rounded-xl border border-line p-3 text-sm text-mute">{c.note}</p>}
             <label htmlFor="rv" className="mt-4 block text-sm font-medium">What is the first step to bring it back?</label>
-            <input id="rv" value={step} onChange={(e) => setStep(e.target.value)} onKeyDown={(e) => e.key === "Enter" && step.trim() && (touch(c.id, `Revived: ${step.trim()}`, now), go("r"))} placeholder="e.g. Send a two-line message" className="mt-2 w-full rounded-xl border border-line bg-ink px-3 py-2.5 text-sm" />
+            <input id="rv" value={step} onChange={(e) => setStep(e.target.value)} placeholder="e.g. Send a two-line message" className="mt-2 w-full rounded-xl border border-line bg-ink px-3 py-2.5 text-sm" />
             <div className="mt-4 flex flex-wrap gap-2">
-              <button disabled={!step.trim()} onClick={() => { touch(c.id, `Revived: ${step.trim()}`, now); go("r"); }} className="btn-gold inline-flex items-center gap-1.5 px-4 py-2.5 text-sm disabled:opacity-40"><RotateCw size={15} aria-hidden /> Revive</button>
-              <button onClick={() => { archive(c.id, now); go("a"); }} className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-sm hover:bg-white/5"><Archive size={15} aria-hidden /> Archive</button>
+              <ActionIntentCard label={`Revive ${c.title}`} hint="Record a next step and revive this item" onExecute={() => { if (!step.trim()) { toast("Add a next step first."); return; } touch(c.id, `Revived: ${step.trim()}`, now); go("r"); }}><div className={`btn-gold inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm ${!step.trim() ? "opacity-50" : ""}`}><RotateCw size={15} aria-hidden /> Revive</div></ActionIntentCard>
+              <ActionIntentCard label={`Archive ${c.title}`} hint="Move this item to the archive" onExecute={() => { archive(c.id, now); go("a"); }}><div className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-sm"><Archive size={15} aria-hidden /> Archive</div></ActionIntentCard>
               <button onClick={() => go("s")} className="ml-auto inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm text-mute hover:bg-white/5"><SkipForward size={15} aria-hidden /> Skip</button>
             </div></motion.div></AnimatePresence>)}
       </motion.div>

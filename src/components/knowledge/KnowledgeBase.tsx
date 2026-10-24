@@ -15,26 +15,115 @@ import { ActionIntentCard } from "../canvas/ActionIntent";
 const PAGE = 10;
 const ORDER = Object.fromEntries(CATS.map((c, i) => [c.id, i]));
 
-function Row({ a, i, views, onOpen }: { a: Article; i: number; views: number; onOpen: () => void }) {
-  const cat = catOf(a.cat), I = CAT_ICON[a.cat];
+
+function Row({
+  a,
+  i,
+  views,
+  onOpen,
+}: {
+  a: Article;
+  i: number;
+  views: number;
+  onOpen: () => void;
+}) {
+  const cat = catOf(a.cat);
+  const I = CAT_ICON[a.cat];
+
   return (
-    <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i, 8) * 0.045 }}>
-      <ActionIntentCard label={a.title} hint="Open this guide" onExecute={onOpen} className="w-full rounded-2xl border p-3 transition hover:-translate-y-0.5 sm:gap-4" ><div className="group flex w-full items-center gap-3 text-left" style={{ borderColor: `${cat.color}40`, backgroundImage: `linear-gradient(90deg, ${cat.color}1c, transparent 55%)` }}>
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl sm:h-[52px] sm:w-[52px]" style={chip(cat.color)}><I size={23} color="#fff" aria-hidden /></span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[14px] font-semibold leading-tight">{a.title}</span>
-          <span className="mt-1 line-clamp-2 block text-[12px] leading-snug text-mute">{a.blurb}</span>
-          <span className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-mute sm:hidden"><span className="rounded-full border px-2 py-0.5" style={{ color: cat.color, borderColor: `${cat.color}77` }}>{cat.short}</span><span className="flex items-center gap-1"><Clock size={11} aria-hidden />{a.mins} min read</span><span className="flex items-center gap-1"><Eye size={11} aria-hidden />{fmtViews(views)}</span></span>
-        </span>
-        <span className="hidden shrink-0 flex-col items-start gap-1.5 sm:flex">
-          <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-medium" style={{ color: cat.color, borderColor: `${cat.color}88`, background: `${cat.color}14` }}>{cat.short}</span>
-          <span className="flex items-center gap-4 text-[11px] text-mute"><span className="flex items-center gap-1.5"><Clock size={12} aria-hidden />{a.mins} min read</span><span className="flex w-14 items-center gap-1.5"><Eye size={12} aria-hidden />{fmtViews(views)}</span></span>
-        </span>
-        <ChevronRight size={18} className="shrink-0 text-mute transition group-hover:translate-x-0.5" aria-hidden />
-      </button>
+    <motion.li
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(i, 8) * 0.045 }}
+    >
+      <ActionIntentCard
+        label={a.title}
+        hint="Open this guide"
+        onExecute={onOpen}
+        className="w-full rounded-2xl border p-3 transition hover:-translate-y-0.5 sm:gap-4"
+      >
+        <div
+          className="group flex w-full items-center gap-3 text-left"
+          style={{
+            borderColor: `${cat.color}40`,
+            backgroundImage: `linear-gradient(90deg, ${cat.color}1c, transparent 55%)`,
+          }}
+        >
+          <span
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl sm:h-[52px] sm:w-[52px]"
+            style={chip(cat.color)}
+          >
+            <I size={23} color="#fff" aria-hidden />
+          </span>
+
+          <span className="min-w-0 flex-1">
+            <span className="block text-[14px] font-semibold leading-tight">
+              {a.title}
+            </span>
+
+            <span className="mt-1 line-clamp-2 block text-[12px] leading-snug text-mute">
+              {a.blurb}
+            </span>
+
+            <span className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-mute sm:hidden">
+              <span
+                className="rounded-full border px-2 py-0.5"
+                style={{
+                  color: cat.color,
+                  borderColor: `${cat.color}77`,
+                }}
+              >
+                {cat.short}
+              </span>
+
+              <span className="flex items-center gap-1">
+                <Clock size={11} aria-hidden />
+                {a.mins} min read
+              </span>
+
+              <span className="flex items-center gap-1">
+                <Eye size={11} aria-hidden />
+                {fmtViews(views)}
+              </span>
+            </span>
+          </span>
+
+          <span className="hidden shrink-0 flex-col items-start gap-1.5 sm:flex">
+            <span
+              className="rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
+              style={{
+                color: cat.color,
+                borderColor: `${cat.color}88`,
+                background: `${cat.color}14`,
+              }}
+            >
+              {cat.short}
+            </span>
+
+            <span className="flex items-center gap-4 text-[11px] text-mute">
+              <span className="flex items-center gap-1.5">
+                <Clock size={12} aria-hidden />
+                {a.mins} min read
+              </span>
+
+              <span className="flex w-14 items-center gap-1.5">
+                <Eye size={12} aria-hidden />
+                {fmtViews(views)}
+              </span>
+            </span>
+          </span>
+
+          <ChevronRight
+            size={18}
+            className="shrink-0 text-mute transition group-hover:translate-x-0.5"
+            aria-hidden
+          />
+        </div>
+      </ActionIntentCard>
     </motion.li>
   );
 }
+
 
 export default function KnowledgeBase() {
   const open = useKb((s) => s.open), opens = useKb((s) => s.opens);

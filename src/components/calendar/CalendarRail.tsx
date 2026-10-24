@@ -95,33 +95,124 @@ export function ListDialog({ kind, items, now }: { kind: "upcoming" | "past"; it
   );
 }
 
-export function ItemDialog({ items, now }: { items: CalItem[]; now: number }) {
-  const id = useCalendarUI((s) => s.openId), open = useCalendarUI((s) => s.open); const router = useRouter();
+
+export function ItemDialog({
+  items,
+  now,
+}: {
+  items: CalItem[];
+  now: number;
+}) {
+  const id = useCalendarUI((s) => s.openId);
+  const open = useCalendarUI((s) => s.open);
+  const router = useRouter();
   const { openEvent, select } = useUI();
-  const i = items.find((x) => x.id === id) ?? null; const c = i ? CAT_COLOR[i.cat] : "#2F8BFF"; const close = () => open(null);
+
+  const i = items.find((x) => x.id === id) ?? null;
+  const c = i ? CAT_COLOR[i.cat] : "#2F8BFF";
+  const close = () => open(null);
+
   const navigate = () => {
     if (!i) return;
-    if (i.src === "event" && i.refId) { close(); openEvent(i.refId); }
-    else if (i.src === "task" && i.refId) { close(); select(i.refId); }
-    else if (i.src === "joined") { close(); router.push("/actions"); }
+
+    if (i.src === "event" && i.refId) {
+      close();
+      openEvent(i.refId);
+    } else if (i.src === "task" && i.refId) {
+      close();
+      select(i.refId);
+    } else if (i.src === "joined") {
+      close();
+      router.push("/actions");
+    }
   };
+
   return (
     <Dialog open={!!i} onClose={close} label="Calendar item">
-      {i && <>
-        <span className="w-fit rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-white" style={{ background: c }}>{CAT_LABEL[i.cat]}</span>
-        <h2 className="mt-2 pr-8 text-xl font-semibold leading-tight">{i.title}</h2>
-        <ul className="mt-3 space-y-2 text-[13px] text-mute">
-          <li className="flex items-center gap-2"><CalendarDays size={15} aria-hidden />{i.allDay && !isSameDayItem(i) ? `${longDay(i.start)} – ${longDay(i.end)}` : longDay(i.start)}</li>
-          <li className="flex items-center gap-2"><Clock size={15} aria-hidden />{itemTime(i)}{!i.allDay ? ` – ${new Date(i.end).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}` : ""}{isPast(i, now) ? " · already happened" : ""}</li>
-          {i.where && <li className="flex items-center gap-2"><MapPin size={15} aria-hidden />{i.where}</li>}
-        </ul>
-        {i.blurb && <p className="mt-3 text-[12.5px] text-mute">{i.blurb}</p>}
-        {i.src === "sample"
-          ? <p className="mt-5 rounded-xl border border-dashed border-honey/50 bg-honey/10 px-3.5 py-2.5 text-center text-[12.5px] text-honey">Close this dialog, then <strong>drag this item</strong> onto the <strong>Add to Events</strong> zone. ⠿</p>
-          : <ActionIntentCard label={i.src === "event" ? "Open event" : i.src === "task" ? "Open item" : "Open Action Center"} onExecute={navigate} className="mt-5"><div className="btn-gold flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px]">{i.src === "event" ? <>Open event <ArrowRight size={14} aria-hidden /></> : i.src === "task" ? <>Open item <ArrowRight size={14} aria-hidden /></> : <>Open Action Center <ArrowRight size={14} aria-hidden />}</div></ActionIntentCard>
-        }
-      </>}
+      {i && (
+        <>
+          <span
+            className="w-fit rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-white"
+            style={{ background: c }}
+          >
+            {CAT_LABEL[i.cat]}
+          </span>
+
+          <h2 className="mt-2 pr-8 text-xl font-semibold leading-tight">
+            {i.title}
+          </h2>
+
+          <ul className="mt-3 space-y-2 text-[13px] text-mute">
+            <li className="flex items-center gap-2">
+              <CalendarDays size={15} aria-hidden />
+              {i.allDay && !isSameDayItem(i)
+                ? `${longDay(i.start)} – ${longDay(i.end)}`
+                : longDay(i.start)}
+            </li>
+
+            <li className="flex items-center gap-2">
+              <Clock size={15} aria-hidden />
+              {itemTime(i)}
+              {!i.allDay
+                ? ` – ${new Date(i.end).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}`
+                : ""}
+              {isPast(i, now) ? " · already happened" : ""}
+            </li>
+
+            {i.where && (
+              <li className="flex items-center gap-2">
+                <MapPin size={15} aria-hidden />
+                {i.where}
+              </li>
+            )}
+          </ul>
+
+          {i.blurb && (
+            <p className="mt-3 text-[12.5px] text-mute">{i.blurb}</p>
+          )}
+
+          {i.src === "sample" ? (
+            <p className="mt-5 rounded-xl border border-dashed border-honey/50 bg-honey/10 px-3.5 py-2.5 text-center text-[12.5px] text-honey">
+              Close this dialog, then{" "}
+              <strong>drag this item</strong> onto the{" "}
+              <strong>Add to Events</strong> zone. ⠿
+            </p>
+          ) : (
+            <ActionIntentCard
+              label={
+                i.src === "event"
+                  ? "Open event"
+                  : i.src === "task"
+                    ? "Open item"
+                    : "Open Action Center"
+              }
+              onExecute={navigate}
+              className="mt-5"
+            >
+              <div className="btn-gold flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px]">
+                {i.src === "event" ? (
+                  <>
+                    Open event <ArrowRight size={14} aria-hidden />
+                  </>
+                ) : i.src === "task" ? (
+                  <>
+                    Open item <ArrowRight size={14} aria-hidden />
+                  </>
+                ) : (
+                  <>
+                    Open Action Center <ArrowRight size={14} aria-hidden />
+                  </>
+                )}
+              </div>
+            </ActionIntentCard>
+          )}
+        </>
+      )}
     </Dialog>
   );
 }
+
 const isSameDayItem = (i: CalItem) => new Date(i.start).toDateString() === new Date(i.end).toDateString();

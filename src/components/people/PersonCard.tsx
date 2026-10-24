@@ -2,7 +2,6 @@
 import { motion } from "motion/react";
 import { MapPin, Users } from "lucide-react";
 import { followerCount, fmtK, type Person } from "@/features/people/people";
-import { usePeopleUI } from "@/lib/peopleStore";
 import { PersonAvatar, StatusDot, Verified } from "./PersonBits";
 import Draggable from "../canvas/Draggable";
 import { personCard } from "./PeopleZones";
@@ -18,7 +17,6 @@ export function Chips({ skills, max = SHOW }: { skills: string[]; max?: number }
 }
 
 export default function PersonCard({ p, index }: { p: Person; index: number }) {
-  const open = usePeopleUI((s) => s.open);
   return (
     <Draggable label={p.name} payload={() => personCard(p.id, p.name, p.role)} className="h-full" disabled={p.isMe}>
       <motion.article layout initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ delay: Math.min(index, 8) * 0.04 }}
@@ -27,7 +25,7 @@ export default function PersonCard({ p, index }: { p: Person; index: number }) {
         <div className="flex items-start gap-3 pr-10">
           <PersonAvatar p={p} size={54} />
           <div className="min-w-0 pt-0.5">
-            <h3 className="flex items-center gap-1 text-[14px] font-semibold leading-tight"><button onClick={() => open(p.id)} className="truncate rounded-sm text-left after:absolute after:inset-0 after:rounded-2xl after:content-['']">{p.name}</button>{p.verified && <Verified />}</h3>
+            <h3 className="flex items-center gap-1 text-[14px] font-semibold leading-tight"><span className="truncate">{p.name}</span>{p.verified && <Verified />}</h3>
             <p className="mt-0.5 truncate text-[12px]">{p.role}</p>
             <p className="mt-0.5 flex items-center gap-1 truncate text-[10.5px] text-primary"><MapPin size={11} className="shrink-0" aria-hidden />{p.isMe ? "You" : p.city}</p>
           </div>

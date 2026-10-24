@@ -6,14 +6,15 @@ import { usePeople, usePeopleUI } from "@/lib/peopleStore";
 import { useUI } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
 import { FAMILIES, GROUPS, GROUP_LABEL, type Family, type Group } from "@/features/people/people";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 /** "Join Now" and "Edit profile": your own card in the directory. */
 export default function ProfileDialog() {
   const open = usePeopleUI((s) => s.profileOpen), setOpen = usePeopleUI((s) => s.setProfile);
   const { people, saveMe, leave } = usePeople(); const myName = useSettings((s) => s.profile.name), headline = useSettings((s) => s.profile.headline); const toast = useUI((s) => s.toast), celebrate = useUI((s) => s.celebrate);
   const me = people.find((p) => p.isMe);
-  const [role, setRole] = useState(""); const [family, setFamily] = useState<Family>("Developer"); const [city, setCity] = useState(""); const [bio, setBio] = useState(""); const [skills, setSkills] = useState(""); const [groups, setGroups] = useState<Group[]>(["students"]); const [err, setErr] = useState(""); const [sure, setSure] = useState(false);
-  useEffect(() => { if (!open) return; setErr(""); setSure(false); setRole(me?.role ?? (headline || "Student · Innovator")); setFamily(me?.family ?? "Developer"); setCity(me?.city ?? ""); setBio(me?.bio ?? ""); setSkills(me?.skills.join(", ") ?? ""); setGroups(me?.groups ?? ["students"]); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [role, setRole] = useState(""); const [family, setFamily] = useState<Family>("Developer"); const [city, setCity] = useState(""); const [bio, setBio] = useState(""); const [skills, setSkills] = useState(""); const [groups, setGroups] = useState<Group[]>(["students"]); const [err, setErr] = useState("");
+  useEffect(() => { if (!open) return; setErr(""); setRole(me?.role ?? (headline || "Student · Innovator")); setFamily(me?.family ?? "Developer"); setCity(me?.city ?? ""); setBio(me?.bio ?? ""); setSkills(me?.skills.join(", ") ?? ""); setGroups(me?.groups ?? ["students"]); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
   const close = () => setOpen(false);
   const toggle = (g: Group) => setGroups((x) => (x.includes(g) ? x.filter((y) => y !== g) : [...x, g]));
   const save = () => {
@@ -27,7 +28,7 @@ export default function ProfileDialog() {
     <AnimatePresence>
       {open && (
         <motion.div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 md:items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
-          <motion.form role="dialog" aria-modal="true" aria-label={me ? "Edit your profile" : "Join the community"} onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); save(); }}
+          <motion.form role="dialog" aria-modal="true" aria-label={me ? "Edit your profile" : "Join the community"} onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); setErr("Drag Save profile or Join now onto Execute."); }}
             className="scroll-thin max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-3xl border border-line bg-panel p-6" initial={{ y: 40, scale: 0.97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 40, scale: 0.97 }}>
             <div className="flex items-center justify-between"><h2 className="text-xl font-semibold">{me ? "Edit your profile" : "Join the community"}</h2><button type="button" onClick={close} aria-label="Close" className="rounded-full p-2 text-mute hover:bg-white/5"><X size={18} /></button></div>
             <p className="mt-1 text-xs text-mute">{me ? "This is how you appear in the People directory." : "Add yourself to the People directory so others can find and follow you."}</p>
@@ -45,8 +46,8 @@ export default function ProfileDialog() {
             <div className="mt-1.5 flex flex-wrap gap-2" role="group" aria-labelledby="pf-groups">{GROUPS.map((g) => <button key={g} type="button" aria-pressed={groups.includes(g)} onClick={() => toggle(g)} className="pill px-3 py-1.5 text-[12px]">{GROUP_LABEL[g]}</button>)}</div>
             <p role="alert" className="mt-3 min-h-5 text-xs text-[#FF6686]">{err}</p>
             <div className="flex gap-2">
-              {me && <button type="button" onClick={() => { if (!sure) setSure(true); else { leave(); close(); toast("You left the directory."); } }} onBlur={() => setSure(false)} className="rounded-xl border border-line px-3 py-3 text-[13px] text-mute hover:text-[#FF6686]">{sure ? "Click again to leave" : "Leave"}</button>}
-              <button type="submit" className="btn-gold flex-1 py-3 text-sm">{me ? "Save profile" : "Join now"}</button></div>
+              {me && <ActionIntentCard label="Leave the directory" hint="Remove your profile from People" onExecute={() => { leave(); close(); toast("You left the directory."); }}><div className="rounded-xl border border-line px-3 py-3 text-center text-[13px] text-mute">Leave</div></ActionIntentCard>}
+              <ActionIntentCard label={me ? "Save profile" : "Join now"} hint={me ? "Save your People profile" : "Join the People directory"} onExecute={save} className="flex-1"><div className="btn-gold rounded-xl py-3 text-center text-sm">{me ? "Save profile" : "Join now"}</div></ActionIntentCard></div>
           </motion.form>
         </motion.div>)}
     </AnimatePresence>

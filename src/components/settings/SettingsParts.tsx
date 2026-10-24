@@ -9,8 +9,7 @@ import { usePeople, usePeopleUI } from "@/lib/peopleStore";
 import { useNow } from "@/lib/hooks";
 import { SECTIONS, SOCIAL_META, monthYear, socialHref, tzLabel, viewLabel, type NotifPrefs, type Section, type SocialKey } from "@/features/settings/settings";
 import { FeedAvatar, useFeed } from "../actions/ActionRail";
-import Draggable from "../canvas/Draggable";
-import { settingsCard } from "./SettingsZones";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
@@ -33,11 +32,11 @@ export function SettingsNav() {
       <ul className="scroll-thin flex gap-1.5 overflow-x-auto @4xl:flex-col @4xl:overflow-visible">
         {SECTIONS.map(({ id, label }) => { const I = NAV_ICON[id]; const on = section === id;
           return <li key={id} className="shrink-0 @4xl:shrink">
-            <Draggable label={label} payload={() => settingsCard(id, label)} className="w-full @4xl:w-auto">
-              <button onClick={() => setSection(id)} aria-current={on ? "page" : undefined}
+            <ActionIntentCard label={label} hint="Open this settings section" onExecute={() => setSection(id)} className="w-full @4xl:w-auto">
+              <div aria-current={on ? "page" : undefined}
                 className={`flex w-full items-center gap-3 whitespace-nowrap rounded-xl border px-3.5 py-2.5 text-left text-[13.5px] font-medium transition ${on ? "border-honey/70 text-honey shadow-[0_0_18px_-6px_rgba(255,196,0,.8)]" : "border-transparent text-[var(--text)] hover:bg-white/5"}`}
-                style={on ? { background: "linear-gradient(90deg, rgba(255,196,0,.22), rgba(255,196,0,.04))" } : undefined}><I size={18} aria-hidden />{label}</button>
-            </Draggable>
+                style={on ? { background: "linear-gradient(90deg, rgba(255,196,0,.22), rgba(255,196,0,.04))" } : undefined}><I size={18} aria-hidden />{label}</div>
+            </ActionIntentCard>
           </li>; })}
       </ul>
     </nav>

@@ -17,8 +17,8 @@ import { EventDock, eventCard } from "./EventZones";
 const PAGE = 6;
 
 export default function Events() {
-  const { events, cells, setEventArchived } = useStore();
-  const { openEvent, setCreateEvent, setCapture } = useUI();
+  const { events, cells } = useStore();
+  const { openEvent, setCreateEvent } = useUI();
   const now = useNow(); const wide = useMedia("(min-width: 1280px)");
   const [q, setQ] = useState(""); const [filter, setFilter] = useState<Filter>("all"); const [sort, setSort] = useState<SortKey>("updated");
   const [view, setView] = useState<"grid" | "list">("grid"); const [limit, setLimit] = useState(PAGE);
@@ -103,7 +103,7 @@ export default function Events() {
                 {visible.map(({ e, status, stats }, i) => (
                   <li key={e.id} className="min-w-0 [&>*]:h-full">
                     <Draggable label={e.title} payload={() => eventCard(e.id, e.title, e.type)} className="h-full">
-                      <EventCard e={e} status={status} stats={stats} now={now} layout={layout} index={i} onOpen={() => openEvent(e.id)} onCapture={() => setCapture(true, "idea", e.id)} onArchive={() => setEventArchived(e.id, status !== "archived", Date.now())} />
+                      <EventCard e={e} status={status} stats={stats} now={now} layout={layout} index={i} />
                     </Draggable>
                   </li>))}
               </AnimatePresence>

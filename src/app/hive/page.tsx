@@ -20,7 +20,6 @@ import ListView from "@/components/hive/ListView";
 import ReviewMode from "@/components/hive/ReviewMode";
 import ShortcutsDialog from "@/components/hive/ShortcutsDialog";
 import TopEvents, { type EventRow } from "@/components/hive/TopEvents";
-import { HiveDock } from "@/components/hive/HiveZones";
 
 const DAY = 864e5;
 const TYPES: { k: Kind | "all"; l: string }[] = [{ k: "all", l: "All" }, { k: "idea", l: "Ideas" }, { k: "person", l: "People" }, { k: "action", l: "Actions" }];
@@ -161,7 +160,6 @@ export default function HivePage() {
 
       <AnimatePresence>{review && <ReviewMode queue={queue} now={now} onClose={() => setReview(false)} />}</AnimatePresence>
       <AnimatePresence>{help && <ShortcutsDialog onClose={() => setHelp(false)} onTour={() => setTourDone(false)} />}</AnimatePresence>
-      <HiveDock />
     </div>
   );
 }

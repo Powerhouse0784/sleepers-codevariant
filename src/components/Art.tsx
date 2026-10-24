@@ -36,7 +36,7 @@ export function Mascot({ className = "" }: { className?: string }) {
           <path d="M104 104h6" stroke="#0e0e14" strokeWidth="4" /><path d="M72 98q10-5 22 0" stroke="#fff" strokeOpacity=".5" strokeWidth="3" fill="none" strokeLinecap="round" />
           <path d="M90 130q18 16 36 0" stroke="#8a3d00" strokeWidth="4" fill="none" strokeLinecap="round" />
           <circle cx="76" cy="128" r="6" fill="#ff8f6b" fillOpacity=".55" /><circle cx="140" cy="128" r="6" fill="#ff8f6b" fillOpacity=".55" />
-          <motion.path d="M150 160 Q186 150 196 118" stroke="#FFC400" strokeWidth="14" strokeLinecap="round" fill="none" animate={{ d: ["M150 160 Q186 150 196 118", "M150 160 Q190 146 202 112", "M150 160 Q186 150 196 118"] }} transition={{ duration: 2.4, repeat: Infinity }} />
+          <motion.path initial={{ d: "M150 160 Q186 150 196 118" }} stroke="#FFC400" strokeWidth="14" strokeLinecap="round" fill="none" animate={{ d: ["M150 160 Q186 150 196 118", "M150 160 Q190 146 202 112", "M150 160 Q186 150 196 118"] }} transition={{ duration: 2.4, repeat: Infinity }} />
         </svg>
       )}
     </motion.div>

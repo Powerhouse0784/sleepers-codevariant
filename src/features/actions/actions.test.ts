@@ -1,0 +1,20 @@
+import { OPPORTUNITIES, xpOf, levelOf, countsOf, participantsOf, whenOf, matches, ago, feedOf, BASE_XP } from "./actions.ts";
+import assert from "node:assert/strict";
+const none = {};
+assert.deepEqual(levelOf(xpOf(none)), { level: 3, into: 420, need: 800, name: "Community Explorer", pct: 53 });
+assert.deepEqual(countsOf(none), { events: 5, challenges: 2, badges: 4 });
+const j = { hackathon: { at: 1 }, "green-campus": { at: 2 } };
+assert.equal(xpOf(j), BASE_XP + 50 + 25);
+assert.equal(xpOf({ ...j, "green-campus": { at: 2, done: 3 } }), BASE_XP + 50 + 25 + 150);
+assert.equal(countsOf({ ...j, "green-campus": { at: 2, done: 3 } }).challenges, 3);
+assert.equal(xpOf({ "innovation-fund": { at: 1 } }), BASE_XP); // ideas are not "joined"
+assert.equal(levelOf(2400).level, 4); assert.equal(levelOf(2400).name, "Idea Spark");
+const six = Object.fromEntries(["hackathon", "design-workshop", "pitch-night", "green-campus", "cleanup-sprint", "zero-waste"].map((id) => [id, { at: 1 }]));
+assert.equal(countsOf(six).badges, 6); assert.equal(countsOf(j).badges, 4);
+const o = OPPORTUNITIES[0]; assert.equal(participantsOf(o, none), 245); assert.equal(participantsOf(o, j), 246);
+const now = new Date(2026, 9, 24, 15, 0).getTime();
+assert.equal(whenOf(o, now), "25 Oct 2026  •  10:00 AM"); assert.equal(whenOf(OPPORTUNITIES[1], now), "15 Nov 2026  •  09:00 AM"); assert.equal(whenOf(OPPORTUNITIES[3], now), "Ongoing");
+assert.ok(matches(OPPORTUNITIES[1], "eco") && matches(OPPORTUNITIES[0], "HACK") && matches(OPPORTUNITIES[0], "event") && !matches(OPPORTUNITIES[0], "eco"));
+assert.deepEqual([ago(0), ago(5 * 6e4), ago(90 * 6e4), ago(26 * 36e5)], ["just now", "5m ago", "1h ago", "1d ago"]);
+const f = feedOf({ hackathon: { at: now - 60000 } }, now, now); assert.equal(f[0].who, "You"); assert.equal(f[1].who, "Priya Singh");
+console.log("actions ok");

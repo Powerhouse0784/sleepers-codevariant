@@ -19,8 +19,8 @@ export default function QuickCapture() {
   const now = useNow();
   const [kind, setKind] = useState<Kind>("idea");
   const [title, setTitle] = useState(""); const [note, setNote] = useState(""); const [eventId, setEventId] = useState("");
-  const ck = useUI((s) => s.captureKind);
-  useEffect(() => { if (open) setKind(ck); }, [open, ck]);
+  const ck = useUI((s) => s.captureKind), ceid = useUI((s) => s.captureEventId);
+  useEffect(() => { if (open) { setKind(ck); setEventId(ceid); } }, [open, ck, ceid]);
   const cur = KINDS.find((x) => x.k === kind)!;
   const close = () => { setOpen(false); setTitle(""); setNote(""); };
   const save = () => {
@@ -48,7 +48,7 @@ export default function QuickCapture() {
             <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder={kind === "person" ? "What did you promise them?" : "Optional note"} aria-label="Note" rows={2}
               className="mt-3 w-full resize-none rounded-xl border border-line bg-ink px-3 py-2.5 text-sm placeholder:text-mute/60" />
             <select value={eventId} onChange={(e) => setEventId(e.target.value)} aria-label="Event" className="mt-3 w-full rounded-xl border border-line bg-ink px-3 py-2.5 text-sm">
-              {events.map((e) => <option key={e.id} value={e.id}>{e.title}</option>)}
+              {events.filter((e) => !e.archived).map((e) => <option key={e.id} value={e.id}>{e.title}</option>)}
             </select>
             <button onClick={save} disabled={!title.trim()} className="mt-5 w-full rounded-xl bg-honey py-3 text-sm font-semibold text-[#1a1304] disabled:opacity-40">Add to hive</button>
           </motion.div>

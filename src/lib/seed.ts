@@ -1,14 +1,28 @@
 import type { Cell, HiveEvent, Kind } from "@/types";
 const H = 36e5;
+const D = 24 * H;
 /** Sample workspace. Labelled as demo data in the UI. Timestamps are relative to "now" so the hive always looks alive. */
 export function makeSeed(now: number): { events: HiveEvent[]; cells: Cell[] } {
   const ago = (h: number) => new Date(now - h * H).toISOString();
+  /** Day offset from today (negative = past) at a given local hour. */
+  const day = (offset: number, hour = 9) => { const d = new Date(now + offset * D); d.setHours(hour, 0, 0, 0); return d.toISOString(); };
+  const ev = (e: Omit<HiveEvent, "date"> & { date?: string }): HiveEvent => ({ date: e.startsAt ?? ago(0), ...e });
+
   const events: HiveEvent[] = [
-    { id: "e1", title: "HackSphere 2026", type: "Hackathon", date: ago(24 * 5), venue: "Bangalore, India" },
-    { id: "e2", title: "DevConnect Delhi", type: "Conference", date: ago(24 * 18), venue: "Delhi, India" },
-    { id: "e3", title: "Founders Mixer", type: "Networking", date: ago(24 * 45), venue: "Mumbai, India" },
-    { id: "e4", title: "TechSummit 2026", type: "Conference", date: ago(-48), venue: "Bangalore, India",
-      startsAt: (() => { const d = new Date(now + 48 * H); d.setHours(9, 0, 0, 0); return d.toISOString(); })() },
+    // The 4 events the dashboard has always used keep their ids and names.
+    ev({ id: "e1", title: "HackSphere 2026", type: "Hackathon", venue: "Bangalore, India", startsAt: day(-7), endsAt: day(-5, 18), date: ago(24 * 5), updatedAt: ago(24 * 9), tags: ["AI", "Offline-first"] }),
+    ev({ id: "e2", title: "DevConnect Delhi", type: "Conference", venue: "Delhi, India", startsAt: day(-19), endsAt: day(-18, 18), date: ago(24 * 18), updatedAt: ago(24 * 19), tags: ["Dev tools"] }),
+    ev({ id: "e3", title: "Founders Mixer", type: "Networking", venue: "Mumbai, India", startsAt: day(-45, 18), endsAt: day(-45, 21), date: ago(24 * 45), updatedAt: ago(24 * 45), archived: true }),
+    ev({ id: "e4", title: "TechSummit 2026", type: "Conference", venue: "Bangalore, India", date: day(2, 9), startsAt: day(2, 9), endsAt: day(4, 18), updatedAt: ago(24 * 10), tags: ["Keynotes"] }),
+    // Sample events for the Events screen (counts and progress come from `sample` plus anything the user captures).
+    ev({ id: "e5", title: "Cloud Native Summit", type: "Conference", venue: "Bangalore, India", startsAt: day(-1, 9), endsAt: day(1, 18), updatedAt: ago(2), visitedAt: ago(2), sample: { ideas: 12, people: 8, actions: 4, progress: 75 }, tags: ["Cloud", "Platform"] }),
+    ev({ id: "e6", title: "Build for Tomorrow", type: "Hackathon", venue: "Online", startsAt: day(-2, 10), endsAt: day(1, 20), updatedAt: ago(24), visitedAt: ago(24), sample: { ideas: 8, people: 5, actions: 2, progress: 60 }, tags: ["Climate", "Teams"] }),
+    ev({ id: "e7", title: "Design Forward Meetup", type: "Meetup", venue: "Delhi, India", startsAt: day(-30, 17), endsAt: day(-30, 21), updatedAt: ago(72), visitedAt: ago(72), sample: { ideas: 15, people: 11, actions: 6, progress: 100 }, tags: ["Design"] }),
+    ev({ id: "e8", title: "Startup Connect", type: "Networking", venue: "Mumbai, India", startsAt: day(-45, 17), endsAt: day(-45, 21), updatedAt: ago(24 * 4), sample: { ideas: 6, people: 4, actions: 3, progress: 70 }, tags: ["Founders"] }),
+    ev({ id: "e9", title: "AI & Impact Forum", type: "Forum", venue: "New Delhi, India", startsAt: day(-60, 10), endsAt: day(-60, 17), updatedAt: ago(24 * 6), sample: { ideas: 10, people: 7, actions: 5, progress: 70 }, tags: ["AI", "Policy"] }),
+    ev({ id: "e10", title: "Product Makers Night", type: "Meetup", venue: "Bangalore, India", startsAt: day(-80, 18), endsAt: day(-80, 22), updatedAt: ago(24 * 8), sample: { ideas: 14, people: 9, actions: 4, progress: 90 }, tags: ["Product"] }),
+    ev({ id: "e11", title: "Women in Tech Summit", type: "Conference", venue: "Pune, India", startsAt: day(12, 9), endsAt: day(13, 18), updatedAt: ago(24 * 11), tags: ["Community"] }),
+    ev({ id: "e12", title: "Open Source Weekend", type: "Hackathon", venue: "Online", startsAt: day(20, 10), endsAt: day(21, 20), updatedAt: ago(24 * 12), tags: ["Open source"] }),
   ];
   const c = (id: string, kind: Kind, title: string, eventId: string, h: number, note?: string, extra: Partial<Cell> = {}): Cell => ({
     id, kind, title, note, eventId, createdAt: ago(h + 6), lastMeaningfulActivityAt: ago(h),

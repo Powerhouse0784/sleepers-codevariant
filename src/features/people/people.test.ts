@@ -1,0 +1,14 @@
+import { makePeople, byPoints, sortPeople, inTab, matches, communityStats, fmtK, fmtBig, followerCount, skillsOf, familiesOf } from "./people.ts";
+import assert from "node:assert/strict";
+const all = makePeople();
+assert.deepEqual(sortPeople(all, "popular").slice(0, 8).map((p) => p.name), ["Aryan Sharma", "Priya Singh", "Rohan Verma", "Sneha Gupta", "Aditya Kumar", "Neha Sharma", "Karan Malhotra", "Isha Khan"]);
+assert.deepEqual(byPoints(all).slice(0, 5).map((p) => p.points), [4800, 4200, 3900, 3500, 3100]);
+assert.deepEqual(["2.4k", "1.8k", "980", "870", "10k"], [fmtK(2400), fmtK(1800), fmtK(980), fmtK(870), fmtK(10200)]);
+assert.deepEqual([fmtBig(10200), fmtBig(2600), fmtBig(480)], ["10.2K", "2.6K", "480"]);
+assert.equal(all.filter((p) => inTab(p, "followed")).length, 0);
+const f = all.map((p) => (p.id === "priya" ? { ...p, followed: true } : p)); assert.equal(followerCount(f[1]), 1801); assert.equal(f.filter((p) => inTab(p, "followed")).length, 1);
+assert.ok(all.filter((p) => inTab(p, "teams")).length >= 2 && all.filter((p) => inTab(p, "mentors")).length >= 2);
+assert.ok(matches(all[0], "typescript") && matches(all[0], "BANGALORE") && !matches(all[0], "figma"));
+assert.deepEqual(communityStats(all), { members: 10200, active: 2600, fresh: 480, positive: 98 });
+assert.ok(skillsOf(all).includes("Figma") && familiesOf(all).length === 6);
+console.log("people: ok");

@@ -41,7 +41,7 @@ export default function Hive({ cells, nowMs, selectedId, onSelect, size = 38 }: 
         const col = STATE_COLOR[m.state], Icon = KIND_ICON[c.kind as Kind];
         const sel = selectedId === c.id;
         return (
-          <motion.g key={c.id} transform={`translate(${x} ${y})`} className="cell" tabIndex={0} role="button"
+          <g key={c.id} transform={`translate(${x} ${y})`}><motion.g className="cell" tabIndex={0} role="button"
             aria-label={`${c.title}. ${m.state}, ${c.kind}. ${m.reason}`}
             onClick={() => onSelect(c.id)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(c.id); } }}
             initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: i * 0.025, type: "spring", stiffness: 260, damping: 20 }}>
@@ -53,7 +53,7 @@ export default function Hive({ cells, nowMs, selectedId, onSelect, size = 38 }: 
             <polygon className="body" points={hex(size * 0.93)} fill={col} fillOpacity={0.28 + 0.72 * m.heat}
               stroke={sel ? "#fff" : col} strokeWidth={sel ? 3 : 1} strokeOpacity={sel ? 1 : 0.55} style={{ transition: "fill-opacity .6s" }} />
             <Icon x={-9} y={-9} width={18} height={18} color={m.heat > 0.45 ? "#1a1304" : "#eef0f7"} aria-hidden />
-          </motion.g>
+          </motion.g></g>
         );
       })}
     </svg>

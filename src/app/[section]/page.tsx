@@ -1,10 +1,6 @@
 import Link from "next/link";
 const COPY: Record<string, [string, string]> = {
   events: ["Events", "Your event spaces, with notes, people and actions for each one."],
-  ideas: ["Ideas", "Every idea, its history, and its next step."],
-  people: ["People", "Who you met, what you discussed, and what you promised."],
-  actions: ["Action Center", "Commitments, due dates and reminders in one place."],
-  calendar: ["Calendar", "Upcoming events and follow-up dates."],
   knowledge: ["Knowledge Base", "Takeaways and resources from every event."],
   settings: ["Settings", "Theme, privacy and your data."],
 };

@@ -5,13 +5,13 @@ import type { Group } from "three";
 
 const Y = "#FFC400", HEAD = "#FFD43B", K = "#14100a";
 
-function Bee() {
+function Bee({ ptr }: { ptr: { current: { x: number; y: number } } }) {
   const root = useRef<Group>(null!), wl = useRef<Group>(null!), wr = useRef<Group>(null!), arm = useRef<Group>(null!);
   useFrame((s, dt) => {
     const t = s.clock.elapsedTime, k = Math.min(1, dt * 4);
     root.current.position.y = -0.2 + Math.sin(t * 1.6) * 0.09;
-    root.current.rotation.y += (s.pointer.x * 0.55 - root.current.rotation.y) * k;   // looks at your cursor
-    root.current.rotation.x += (-s.pointer.y * 0.25 - root.current.rotation.x) * k;
+    root.current.rotation.y += (ptr.current.x * 0.55 - root.current.rotation.y) * k;   // looks at your cursor
+    root.current.rotation.x += (ptr.current.y * 0.25 - root.current.rotation.x) * k;
     const f = Math.sin(t * 38) * 0.28;
     wl.current.rotation.z = 0.55 + f; wr.current.rotation.z = -0.55 - f;
     arm.current.rotation.z = 2.4 + Math.sin(t * 3) * 0.25;                          // friendly wave
@@ -49,6 +49,11 @@ function Bee() {
 export default function Bee3D({ onReady }: { onReady: () => void }) {
   const box = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  const ptr = useRef({ x: 0, y: 0 }); // normalised to the window and clamped, so the bee never spins round
+  useEffect(() => {
+    const m = (e: PointerEvent) => { ptr.current.x = Math.max(-1, Math.min(1, (e.clientX / innerWidth) * 2 - 1)); ptr.current.y = Math.max(-1, Math.min(1, (e.clientY / innerHeight) * 2 - 1)); };
+    window.addEventListener("pointermove", m); return () => window.removeEventListener("pointermove", m);
+  }, []);
   useEffect(() => { // pause rendering when scrolled away or the tab is hidden
     const el = box.current; if (!el) return;
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.05 });
@@ -56,10 +61,9 @@ export default function Bee3D({ onReady }: { onReady: () => void }) {
   }, []);
   return (
     <div ref={box} className="pointer-events-none absolute inset-0">
-      <Canvas dpr={[1, 1.6]} frameloop={visible ? "always" : "never"} camera={{ position: [0, 0.1, 7.4], fov: 30 }} gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
-        eventSource={typeof document !== "undefined" ? document.body : undefined} eventPrefix="client" onCreated={onReady}>
+      <Canvas dpr={[1, 1.6]} frameloop={visible ? "always" : "never"} camera={{ position: [0, 0.1, 7.4], fov: 30 }} gl={{ antialias: true, alpha: true, powerPreference: "low-power" }} onCreated={onReady}>
         <ambientLight intensity={1.15} /><directionalLight position={[3, 4, 5]} intensity={2.4} /><pointLight position={[-4, 1, 3]} color="#7aa8ff" intensity={35} /><pointLight position={[3, -2, 3]} color="#ff9a3c" intensity={20} />
-        <Bee />
+        <Bee ptr={ptr} />
       </Canvas>
     </div>
   );

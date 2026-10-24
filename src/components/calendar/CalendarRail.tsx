@@ -118,9 +118,7 @@ export function ItemDialog({ items, now }: { items: CalItem[]; now: number }) {
         {i.blurb && <p className="mt-3 text-[12.5px] text-mute">{i.blurb}</p>}
         {i.src === "sample"
           ? <p className="mt-5 rounded-xl border border-dashed border-honey/50 bg-honey/10 px-3.5 py-2.5 text-center text-[12.5px] text-honey">Close this dialog, then <strong>drag this item</strong> onto the <strong>Add to Events</strong> zone. ⠿</p>
-          : <button onClick={navigate} className="btn-gold mt-5 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[13px]">
-              {i.src === "event" ? <>Open event <ArrowRight size={14} aria-hidden /></> : i.src === "task" ? <>Open item <ArrowRight size={14} aria-hidden /></> : <>Open Action Center <ArrowRight size={14} aria-hidden /></>}
-            </button>
+          : <ActionIntentCard label={i.src === "event" ? "Open event" : i.src === "task" ? "Open item" : "Open Action Center"} onExecute={navigate} className="mt-5"><div className="btn-gold flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px]">{i.src === "event" ? <>Open event <ArrowRight size={14} aria-hidden /></> : i.src === "task" ? <>Open item <ArrowRight size={14} aria-hidden /></> : <>Open Action Center <ArrowRight size={14} aria-hidden />}</div></ActionIntentCard>
         }
       </>}
     </Dialog>

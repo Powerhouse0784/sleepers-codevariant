@@ -31,7 +31,7 @@ Most of the value of an event happens after it ends: the idea you sketched, the 
 - **Momentum Hive.** One pure, tested function decides whether something is hot, warm, cooling or cold. Only deliberate actions (a note, a follow-up, a completion) count; passive views never do.
 - **Nine connected screens.** Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base and Settings share one design system, in light and dark themes.
 - **Derived, not stored.** Event status, counts, progress, rankings, XP and levels are all computed from source data, so they cannot drift out of sync.
-- **Canvas Protocol.** Primary actions (submit, save, delete, like, move, post) are performed by dragging a card onto an Action Zone, with full mouse, touch and keyboard support.
+- **Canvas Protocol.** Primary data mutations and item-opening actions use draggable data/action cards and named Action Zones across Daily Buzz, Events, Momentum Hive, Ideas, People, Action Center, Calendar, Knowledge Base and Settings. Mouse, touch and keyboard dragging are supported. Secondary controls such as filters, tabs, modal close, and view selectors remain conventional controls.
 - **A shared motion layer.** Page transitions, scroll-reveal cards, a pointer spotlight, magnetic buttons and an animated backdrop, switched off automatically for reduced motion and Calm mode.
 - **Rule-based insights.** Insights and Bee Buddy tips come from transparent rules, not an AI service.
 - **Accessible by default.** Dialogs close with Esc, filters expose `aria-pressed`, status is never conveyed by colour alone, and Calm mode removes motion.
@@ -114,7 +114,7 @@ The engine is shared and each screen declares its own zones and rules:
 - `src/components/canvas/`: `Draggable`, `ActionZone` and `DragLayer` (floating card, keyboard dragging, screen-reader announcements)
 - `src/features/<screen>/canvas.ts`: plain, tested rules for what each zone accepts
 
-**Status:** Ideas is complete (Support, Discuss, Just an idea, In progress, Done, Publish, Save draft, Bin, Post comment). Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base and Daily Buzz are still to be converted.
+**Status:** The core Canvas Protocol paths are now wired across all nine screens. Ideas uses Support, Discuss, stage changes, Publish, Save draft, Bin and Post comment zones. Event cards expose Open, Capture, Archive and Restore; People cards expose View Profile, Follow and Unfollow; opportunity cards expose Join, Complete, Leave and Submit Idea; calendar cards expose Open, Add to Events, Open Event and date-list zones; Hive cards expose Open and Archive. Forms that create or save primary data use drag-only action cards and a shared Execute zone. Some secondary navigation and preference controls intentionally remain click-based.
 
 ## How it works
 

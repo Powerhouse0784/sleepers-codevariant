@@ -6,6 +6,7 @@ import { useStore, useUI } from "@/lib/store";
 import { useNow } from "@/lib/hooks";
 import { EVENT_TYPES } from "@/types";
 import { TypePill } from "./EventCover";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 const dayStr = (ms: number) => { const d = new Date(ms); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const at = (day: string, h: number) => { const [y, m, d] = day.split("-").map(Number); return new Date(y, m - 1, d, h).toISOString(); };
@@ -27,7 +28,7 @@ export default function CreateEventDialog() {
     <AnimatePresence>
       {open && (
         <motion.div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 md:items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
-          <motion.form role="dialog" aria-modal="true" aria-label="Create event" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); save(); }}
+          <motion.form role="dialog" aria-modal="true" aria-label="Create event" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); setErr("Drag the Create event card onto Execute to save."); }}
             className="w-full max-w-md rounded-3xl border border-line bg-panel p-6" initial={{ y: 40, scale: 0.97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 40, scale: 0.97 }}>
             <div className="flex items-center justify-between"><h2 className="text-xl font-semibold">Create event</h2><button type="button" onClick={close} aria-label="Close" className="rounded-full p-2 text-mute hover:bg-white/5"><X size={18} /></button></div>
             <p className="mt-1 text-xs text-mute">Start with the basics. You can capture ideas, people and actions into it right after.</p>
@@ -46,7 +47,7 @@ export default function CreateEventDialog() {
             <label className="mt-4 block text-xs font-medium text-mute" htmlFor="ev-tags">Tags (optional, comma separated)</label>
             <input id="ev-tags" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="AI, founders" className="field mt-1.5 w-full px-3 py-2.5 text-sm" />
             <p role="alert" className="mt-3 min-h-5 text-xs text-[#FF6686]">{err}</p>
-            <button type="submit" className="btn-gold w-full py-3 text-sm">Create event</button>
+            <ActionIntentCard label="Create event" hint="Create this event from the details above" onExecute={save} className="mt-2"><div className="btn-gold w-full rounded-xl py-3 text-center text-sm">Create event</div></ActionIntentCard>
           </motion.form>
         </motion.div>)}
     </AnimatePresence>

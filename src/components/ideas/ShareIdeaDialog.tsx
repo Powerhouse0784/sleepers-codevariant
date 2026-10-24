@@ -6,6 +6,7 @@ import { useIdeas, useIdeasUI } from "@/lib/ideasStore";
 import { useUI } from "@/lib/store";
 import { CATEGORIES, type Category } from "@/features/ideas/ideas";
 import { CategoryPill } from "./IdeaCover";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 /** "Share New Idea". Opens from the hero, the sidebar, the right rail and the command palette. */
 export default function ShareIdeaDialog() {
@@ -24,7 +25,7 @@ export default function ShareIdeaDialog() {
     <AnimatePresence>
       {open && (
         <motion.div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 md:items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
-          <motion.form role="dialog" aria-modal="true" aria-label="Share a new idea" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); save(true); }}
+          <motion.form role="dialog" aria-modal="true" aria-label="Share a new idea" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} onSubmit={(e) => { e.preventDefault(); setErr("Drag Share idea or Save as draft onto Execute."); }}
             className="w-full max-w-md rounded-3xl border border-line bg-panel p-6" initial={{ y: 40, scale: 0.97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 40, scale: 0.97 }}>
             <div className="flex items-center justify-between"><h2 className="text-xl font-semibold">Share a new idea</h2><button type="button" onClick={close} aria-label="Close" className="rounded-full p-2 text-mute hover:bg-white/5"><X size={18} /></button></div>
             <p className="mt-1 text-xs text-mute">Small thoughts are welcome. Others can like and comment on it.</p>
@@ -37,7 +38,7 @@ export default function ShareIdeaDialog() {
               {CATEGORIES.map((c) => <button key={c} type="button" role="radio" aria-checked={cat === c} onClick={() => setCat(c)} className={`rounded-md p-0.5 ${cat === c ? "ring-2 ring-honey" : "opacity-70 hover:opacity-100"}`}><CategoryPill category={c} className="px-2.5 py-1 text-[11px]" /></button>)}
             </div>
             <p role="alert" className="mt-3 min-h-5 text-xs text-[#FF6686]">{err}</p>
-            <div className="flex gap-2"><button type="button" onClick={() => save(false)} className="btn-blue px-4 py-3 text-sm">Save as draft</button><button type="submit" className="btn-gold flex-1 py-3 text-sm">Share idea</button></div>
+            <div className="grid gap-2 sm:grid-cols-2"><ActionIntentCard label="Save as draft" hint="Keep this idea private" onExecute={() => save(false)}><div className="btn-blue rounded-xl px-4 py-3 text-center text-sm">Save as draft</div></ActionIntentCard><ActionIntentCard label="Share idea" hint="Publish this idea to the community" onExecute={() => save(true)}><div className="btn-gold rounded-xl py-3 text-center text-sm">Share idea</div></ActionIntentCard></div>
           </motion.form>
         </motion.div>)}
     </AnimatePresence>

@@ -10,6 +10,7 @@ import { SupportDialog, VideoDialog } from "./Dialogs";
 import { QuickLinks, Popular, ArtPanel, type Mode } from "./RightRail";
 import { CAT_ICON, chip } from "./icons";
 import Hex from "../events/Hex";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 const PAGE = 10;
 const ORDER = Object.fromEntries(CATS.map((c, i) => [c.id, i]));
@@ -18,7 +19,7 @@ function Row({ a, i, views, onOpen }: { a: Article; i: number; views: number; on
   const cat = catOf(a.cat), I = CAT_ICON[a.cat];
   return (
     <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i, 8) * 0.045 }}>
-      <button onClick={onOpen} className="group flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition hover:-translate-y-0.5 sm:gap-4" style={{ borderColor: `${cat.color}40`, backgroundImage: `linear-gradient(90deg, ${cat.color}1c, transparent 55%)` }}>
+      <ActionIntentCard label={a.title} hint="Open this guide" onExecute={onOpen} className="w-full rounded-2xl border p-3 transition hover:-translate-y-0.5 sm:gap-4" ><div className="group flex w-full items-center gap-3 text-left" style={{ borderColor: `${cat.color}40`, backgroundImage: `linear-gradient(90deg, ${cat.color}1c, transparent 55%)` }}>
         <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl sm:h-[52px] sm:w-[52px]" style={chip(cat.color)}><I size={23} color="#fff" aria-hidden /></span>
         <span className="min-w-0 flex-1">
           <span className="block text-[14px] font-semibold leading-tight">{a.title}</span>

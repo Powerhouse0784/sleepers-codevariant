@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Sparkles, Skyline } from "../Art";
 import HeroBee from "../HeroBee";
 import EventCover from "./EventCover";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 function Honeycomb() {
   const cells: React.ReactNode[] = []; const R = 26, W = Math.sqrt(3) * R;
@@ -32,8 +33,8 @@ export default function EventsHero({ onCreate, onExplore }: { onCreate: () => vo
         <h1 id="events-hero" className="serif hero-text text-[44px] leading-[1.05] 2xl:text-[52px]">Your moments.<br /><span className="ev-gold">Their momentum.</span></h1>
         <p className="hero-text mt-3 max-w-[360px] text-[14px] leading-relaxed opacity-90">Collect your event takeaways, reconnect with the people you met, and turn your memories into meaningful action.</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <button onClick={onCreate} className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 text-sm"><Plus size={16} aria-hidden /> Create event</button>
-          <button onClick={onExplore} className="btn-ghost inline-flex items-center px-5 py-2.5 text-sm">Explore sample event</button>
+          <ActionIntentCard label="Create event" onExecute={onCreate}><div className="btn-gold rounded-xl px-5 py-2.5 text-sm"><Plus size={16} aria-hidden /> Create event</div></ActionIntentCard>
+          <ActionIntentCard label="Explore sample event" onExecute={onExplore}><div className="btn-ghost rounded-xl px-5 py-2.5 text-sm">Explore sample event</div></ActionIntentCard>
         </div>
       </div>
       <HeroBee className="absolute bottom-3 left-[40%] z-10 h-[82%] w-[19%] max-w-[230px]" />

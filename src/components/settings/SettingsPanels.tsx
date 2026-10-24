@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { Moon, Sun, Download, Trash2, Database, ServerOff, Check, ChevronDown, PlayCircle, BookOpen, Command, Users, Leaf, Globe, Clock, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { useStore, useUI } from "@/lib/store";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 import { useSettings, useSettingsUI } from "@/lib/settingsStore";
 import { usePeople, usePeopleUI } from "@/lib/peopleStore";
 import { useNow } from "@/lib/hooks";
@@ -39,12 +40,12 @@ export function PrivacyPanel() {
       <Card id="pv-dir" title="Community visibility" sub="Whether other members can find you in People.">
         <div className="flex items-center gap-3 rounded-xl border border-line p-3"><Users size={22} className="shrink-0 text-primary" aria-hidden />
           <span className="min-w-0 flex-1 leading-tight"><span className="block text-[13.5px] font-semibold">{me ? "You are listed in People" : "You are not listed in People"}</span><span className="mt-0.5 block text-[12px] text-mute">{me ? "Your name, role, city, bio and skills are visible to the community." : "Join the directory to let people follow and find you."}</span></span>
-          {me ? <button onClick={() => { leave(); toast("You were removed from People."); }} className="btn-blue shrink-0 px-3.5 py-2 text-[12.5px]">Remove me</button>
-            : <button onClick={() => { router.push("/people"); usePeopleUI.getState().setProfile(true); }} className="btn-gold shrink-0 px-3.5 py-2 text-[12.5px]">Join</button>}</div>
+          {me ? <ActionIntentCard label="Remove me from People" hint="Remove your profile from the community directory" onExecute={() => { leave(); toast("You were removed from People."); }} className="shrink-0"><div className="btn-blue rounded-xl px-3.5 py-2 text-center text-[12.5px]">Remove me</div></ActionIntentCard>
+            : <ActionIntentCard label="Join People" hint="Open the People screen and join the directory" onExecute={() => { router.push("/people"); usePeopleUI.getState().setProfile(true); }} className="shrink-0"><div className="btn-gold rounded-xl px-3.5 py-2 text-center text-[12.5px]">Join</div></ActionIntentCard>}</div>
       </Card>
       <Card id="pv-data" title="Your data" sub="Everything is saved in this browser only. Nothing is sent to a server.">
         <div className="grid gap-2 @md:grid-cols-2">
-          <button onClick={() => { downloadJson(`event-bee-buzz-${new Date().toISOString().slice(0, 10)}.json`); toast("Your data was downloaded."); }} className="btn-blue inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[13px]"><Download size={16} aria-hidden /> Export my data</button>
+          <ActionIntentCard label="Export my data" hint="Download a JSON backup of your app data" onExecute={() => { downloadJson(`event-bee-buzz-${new Date().toISOString().slice(0, 10)}.json`); toast("Your data was downloaded."); }}><div className="btn-blue flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px]"><Download size={16} aria-hidden /> Export my data</div></ActionIntentCard>
           <button onClick={() => setConfirm("delete")} className="inline-flex items-center justify-center gap-2 rounded-[10px] border border-[#ff6b6b]/50 bg-[#ff6b6b]/10 px-4 py-2.5 text-[13px] font-semibold text-[#ff7a7a] transition hover:bg-[#ff6b6b]/20"><Trash2 size={16} aria-hidden /> Delete everything</button>
         </div>
       </Card>

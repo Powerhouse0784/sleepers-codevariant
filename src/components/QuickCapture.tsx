@@ -5,6 +5,7 @@ import { Lightbulb, UserRound, CheckSquare, FileText, X } from "lucide-react";
 import { useStore, useUI } from "@/lib/store";
 import { useNow } from "@/lib/hooks";
 import type { Kind } from "@/types";
+import { ActionIntentCard } from "./canvas/ActionIntent";
 
 const KINDS: { k: Kind; label: string; Icon: typeof Lightbulb; ph: string }[] = [
   { k: "idea", label: "Idea", Icon: Lightbulb, ph: "What is the idea?" },
@@ -43,14 +44,14 @@ export default function QuickCapture() {
                   className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm ${kind === k ? "border-honey bg-honey/10 text-honey" : "border-line text-mute"}`}>
                   <Icon size={16} aria-hidden /> {label}</button>))}
             </div>
-            <input autoFocus value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key === "Enter" && save()} placeholder={cur.ph} aria-label="Title"
+            <input autoFocus value={title} onChange={(e) => setTitle(e.target.value)} placeholder={cur.ph} aria-label="Title"
               className="mt-4 w-full rounded-xl border border-line bg-ink px-3 py-3 text-base placeholder:text-mute/60" />
             <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder={kind === "person" ? "What did you promise them?" : "Optional note"} aria-label="Note" rows={2}
               className="mt-3 w-full resize-none rounded-xl border border-line bg-ink px-3 py-2.5 text-sm placeholder:text-mute/60" />
             <select value={eventId} onChange={(e) => setEventId(e.target.value)} aria-label="Event" className="mt-3 w-full rounded-xl border border-line bg-ink px-3 py-2.5 text-sm">
               {events.filter((e) => !e.archived).map((e) => <option key={e.id} value={e.id}>{e.title}</option>)}
             </select>
-            <button onClick={save} disabled={!title.trim()} className="mt-5 w-full rounded-xl bg-honey py-3 text-sm font-semibold text-[#1a1304] disabled:opacity-40">Add to hive</button>
+            <ActionIntentCard label="Add to hive" hint="Save this captured item" onExecute={save} className="mt-5 w-full"><div className={`w-full rounded-xl bg-honey py-3 text-center text-sm font-semibold text-[#1a1304] ${!title.trim() ? "opacity-50" : ""}`}>Add to hive</div></ActionIntentCard>
           </motion.div>
         </motion.div>
       )}

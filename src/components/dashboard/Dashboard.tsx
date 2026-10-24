@@ -14,7 +14,7 @@ import { CountUp, ago } from "./bits";
 import type { Cell, Kind } from "@/types";
 import Draggable from "../canvas/Draggable";
 import { ActionIntentCard } from "../canvas/ActionIntent";
-import { quickActionCard, DashboardDock } from "./DashboardZones";
+import { hiveCellCard } from "../hive/HiveZones";
 
 const DAY = 864e5;
 const LEGEND = [
@@ -37,7 +37,7 @@ const KIND_ICON = { idea: Lightbulb, person: UserRound, action: CheckCircle2, no
 export default function Dashboard() {
   const buddy = useBuddy();
   const { cells, events, userName } = useStore();
-  const setCapture = useUI((s) => s.setCapture), select = useUI((s) => s.select);
+  const setCapture = useUI((s) => s.setCapture);
   const now = useNow();
   const hour = new Date().getHours();
   const greet = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
@@ -142,9 +142,7 @@ export default function Dashboard() {
         <div className="card p-5"><h2 className="text-[16px] font-semibold">Quick Actions</h2>
           <ul className="mt-3 space-y-2">
             {quick.map(({ l, I, c, k }) => (
-              <li key={l}><button onClick={() => setCapture(true, k)} className="group flex w-full items-center gap-3 rounded-xl border border-line px-3 py-2.5 text-left text-[13px] font-medium transition hover:border-honey/60 hover:bg-white/5">
-                <span className="grid h-8 w-8 place-items-center rounded-lg" style={{ background: c }}><I size={16} color="#fff" aria-hidden /></span><span className="flex-1">{l}</span>
-                <ChevronRight size={15} className="text-mute transition group-hover:translate-x-0.5" aria-hidden /></button></li>))}
+              <li key={l}><ActionIntentCard label={l} onExecute={() => setCapture(true, k)} className="group w-full rounded-xl border border-line px-3 py-2.5 text-[13px] font-medium transition hover:border-honey/60 hover:bg-white/5"><div className="flex items-center gap-3"><span className="grid h-8 w-8 place-items-center rounded-lg" style={{ background: c }}><I size={16} color="#fff" aria-hidden /></span><span className="flex-1">{l}</span><ChevronRight size={15} className="text-mute" aria-hidden /></div></ActionIntentCard></li>))}
           </ul></div>
       </section>
 
@@ -155,14 +153,14 @@ export default function Dashboard() {
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {d.logs.map((l, i) => { const I = KIND_ICON[l.c.kind], col = KIND_COLOR[l.c.kind]; const ev = events.find((e) => e.id === l.c.eventId); return (
               <motion.li key={`${l.c.id}-${l.at}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.07 }}>
-                <button onClick={() => select(l.c.id)} className="group flex h-full w-full flex-col rounded-2xl border p-3.5 text-left transition hover:-translate-y-0.5" style={{ borderColor: `${col}40`, backgroundImage: `radial-gradient(180px 90px at 0% 0%, ${col}26, transparent 75%)` }}>
+                <Draggable label={l.c.title} payload={() => hiveCellCard(l.c)} className="h-full"><div className="group flex h-full w-full flex-col rounded-2xl border p-3.5 text-left transition hover:-translate-y-0.5" style={{ borderColor: `${col}40`, backgroundImage: `radial-gradient(180px 90px at 0% 0%, ${col}26, transparent 75%)` }}>
                   <span className="flex items-center gap-2.5">
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full" style={{ background: `linear-gradient(145deg, ${col}, ${col}99)`, boxShadow: `inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -6px ${col}` }}><I size={16} color="#fff" aria-hidden /></span>
                     <span className="text-[13px] font-semibold leading-tight">{activityLabel(l.c, l.text)}</span></span>
                   <span className="mt-2.5 line-clamp-2 text-[13px] leading-snug">{l.c.title}</span>
                   {ev && <span className="mt-1 truncate text-[11px] text-mute">from {ev.title}</span>}
                   <span className="mt-auto flex items-center justify-between gap-2 pt-3 text-[11px] text-mute"><span>{ago(l.at, now)}</span>{!l.c.done && !l.c.archived && <MomentumBadge state={getMomentum(l.c, now).state} />}</span>
-                </button></motion.li>); })}
+                </div></Draggable></motion.li>); })}
           </ul></div>
 
         <div className="card relative flex flex-col overflow-hidden p-5">

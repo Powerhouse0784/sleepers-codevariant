@@ -10,6 +10,9 @@ import MomentumBadge from "../MomentumBadge";
 import EventCover, { TypePill } from "./EventCover";
 import { Progress, StatusPill } from "./EventCard";
 import type { Kind } from "@/types";
+import { ActionIntentCard } from "../canvas/ActionIntent";
+import Draggable from "../canvas/Draggable";
+import { hiveCellCard } from "../hive/HiveZones";
 
 const KINDS: { k: Kind; label: string; I: typeof Lightbulb }[] = [
   { k: "idea", label: "Idea", I: Lightbulb }, { k: "person", label: "Person", I: UserRound }, { k: "action", label: "Action", I: CheckSquare }, { k: "note", label: "Note", I: FileText },
@@ -17,7 +20,7 @@ const KINDS: { k: Kind; label: string; I: typeof Lightbulb }[] = [
 
 /** Event workspace in a drawer: what you captured here, a capture shortcut for each type, and archive. */
 export default function EventDrawer() {
-  const id = useUI((s) => s.eventId), openEvent = useUI((s) => s.openEvent), select = useUI((s) => s.select), setCapture = useUI((s) => s.setCapture);
+  const id = useUI((s) => s.eventId), openEvent = useUI((s) => s.openEvent), setCapture = useUI((s) => s.setCapture);
   const { events, cells, visitEvent, setEventArchived } = useStore(); const now = useNow();
   const e = events.find((x) => x.id === id);
   useEffect(() => { if (id) visitEvent(id, Date.now()); }, [id, visitEvent]);
@@ -49,14 +52,14 @@ export default function EventDrawer() {
               {status !== "archived" && <>
                 <h3 className="mt-6 text-sm font-semibold">Capture into this event</h3>
                 <div className="mt-2 grid grid-cols-4 gap-2">
-                  {KINDS.map(({ k, label, I }) => <button key={k} onClick={() => setCapture(true, k, e.id)} className="flex flex-col items-center gap-1.5 rounded-xl border border-line py-3 text-[11px] font-medium text-mute transition hover:border-honey/60 hover:text-[var(--text)]"><I size={18} aria-hidden />{label}</button>)}
+                  {KINDS.map(({ k, label, I }) => <ActionIntentCard key={k} label={`Capture ${label.toLowerCase()}`} hint={`Capture a ${label.toLowerCase()} into this event`} onExecute={() => setCapture(true, k, e.id)} className="rounded-xl"><div className="flex flex-col items-center gap-1.5 rounded-xl border border-line py-3 text-[11px] font-medium text-mute"><I size={18} aria-hidden />{label}</div></ActionIntentCard>)}
                 </div></>}
 
               <h3 className="mt-6 text-sm font-semibold">Captured here</h3>
               {mine.length === 0 ? <p className="mt-2 rounded-xl border border-dashed border-line p-4 text-center text-[13px] text-mute">Nothing captured yet. Add someone you met or an idea you had.</p> : (
                 <ul className="mt-2 divide-y divide-line">
                   {mine.map((c) => { const I = KINDS.find((x) => x.k === c.kind)!.I; return (
-                    <li key={c.id}><button onClick={() => select(c.id)} className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/5"><I size={16} className="shrink-0 text-mute" aria-hidden /><span className="min-w-0 flex-1 truncate text-[13px]">{c.title}</span>{!c.done && <MomentumBadge state={getMomentum(c, now).state} />}{c.done && <span className="text-[11px] text-[#1FBF8F]">Done</span>}</button></li>); })}
+                    <li key={c.id}><Draggable label={c.title} payload={() => hiveCellCard(c)} className="w-full"><div className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/5"><I size={16} className="shrink-0 text-mute" aria-hidden /><span className="min-w-0 flex-1 truncate text-[13px]">{c.title}</span>{!c.done && <MomentumBadge state={getMomentum(c, now).state} />}{c.done && <span className="text-[11px] text-[#1FBF8F]">Done</span>}<span className="text-[10px] text-mute/70">Drag</span></div></Draggable></li>); })}
                 </ul>)}
 
               <button onClick={() => { setEventArchived(e.id, status !== "archived", Date.now()); if (status !== "archived") close(); }} className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm hover:bg-white/5">

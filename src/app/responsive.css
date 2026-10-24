@@ -342,3 +342,129 @@ main :is(.grid, [class*="grid-cols-"]) {
     opacity: 0.2;
   }
 }
+
+/* Wide-screen hero artwork: scale the artwork with the banner instead of
+   leaving it at its small intrinsic size on ultrawide monitors. The image
+   itself stays proportional and fully visible; copy remains above it. */
+@media (min-width: 768px) {
+  main section[aria-labelledby="ideas-hero"],
+  main section[aria-labelledby="people-hero"] {
+    min-height: clamp(250px, 21vw, 340px);
+  }
+
+  main section[aria-labelledby="action-hero"] {
+    min-height: clamp(210px, 17vw, 290px);
+  }
+
+  main section[aria-labelledby="settings-hero"] {
+    min-height: clamp(190px, 15vw, 260px);
+  }
+
+  main section[aria-labelledby="cal-hero"] {
+    min-height: clamp(190px, 15vw, 250px);
+  }
+
+  main section[aria-labelledby="ideas-hero"] > div.relative.z-10,
+  main section[aria-labelledby="people-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10,
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="cal-hero"] > div.relative.z-10 {
+    min-height: inherit;
+  }
+
+  main section[aria-labelledby="ideas-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="people-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="settings-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="action-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="cal-hero"] > img[src*="/hero-bee.webp"] {
+    width: clamp(300px, 46%, 650px) !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: contain;
+    object-position: right center;
+    opacity: 1 !important;
+  }
+
+  main section[aria-labelledby="ideas-hero"] > div.relative.z-10,
+  main section[aria-labelledby="people-hero"] > div.relative.z-10 {
+    max-width: 58%;
+    padding-right: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10,
+  main section[aria-labelledby="cal-hero"] > div.relative.z-10 {
+    max-width: 58%;
+    padding-right: clamp(1.25rem, 2.5vw, 2.5rem);
+  }
+
+  main section[aria-labelledby="events-hero"] {
+    min-height: clamp(290px, 25vw, 390px);
+    padding: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10 {
+    max-width: clamp(380px, 42%, 570px);
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10 h1 {
+    font-size: clamp(2.75rem, 3.4vw, 4rem);
+  }
+
+  main section[aria-labelledby="events-hero"] > button {
+    left: 40%;
+    width: clamp(170px, 20%, 300px);
+    max-width: 300px;
+    height: 82%;
+  }
+
+  main section[aria-labelledby="events-hero"] > .poster {
+    max-width: 210px;
+  }
+
+  main section[aria-labelledby="greet"] {
+    min-height: clamp(300px, 26vw, 390px);
+  }
+
+  main section[aria-labelledby="greet"] > button {
+    right: clamp(2rem, 5vw, 5rem);
+    width: clamp(220px, 28%, 360px);
+    height: 72%;
+    max-width: 360px;
+  }
+
+  main section.hero-kb > button[aria-label="Ask the bee for a tip"] {
+    right: clamp(4%, 7vw, 9%);
+    width: clamp(230px, 24%, 320px);
+    max-width: 320px;
+  }
+}
+
+/* On smaller laptop widths, protect the copy column from the enlarged art. */
+@media (min-width: 768px) and (max-width: 1100px) {
+  main section[aria-labelledby="ideas-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="people-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="settings-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="action-hero"] > img[src*="/hero-bee.webp"],
+  main section[aria-labelledby="cal-hero"] > img[src*="/hero-bee.webp"] {
+    width: 43% !important;
+  }
+
+  main section[aria-labelledby="ideas-hero"] > div.relative.z-10,
+  main section[aria-labelledby="people-hero"] > div.relative.z-10,
+  main section[aria-labelledby="settings-hero"] > div.relative.z-10,
+  main section[aria-labelledby="action-hero"] > div.relative.z-10,
+  main section[aria-labelledby="cal-hero"] > div.relative.z-10 {
+    max-width: 62%;
+    padding-right: 1.25rem;
+  }
+
+  main section[aria-labelledby="events-hero"] > div.relative.z-10 {
+    max-width: 45%;
+  }
+
+  main section[aria-labelledby="events-hero"] > button {
+    left: 43%;
+    width: 18%;
+  }
+}

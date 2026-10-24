@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { CalendarDays, MapPin, MoreVertical, Lightbulb, Users, Zap, ExternalLink, Clock } from "lucide-react";
+import { CalendarDays, MapPin, MoreVertical, Lightbulb, Users, Zap, Clock } from "lucide-react";
 import type { HiveEvent } from "@/types";
 import { dateRange, startsIn, type EventStats, type EventStatus } from "@/features/events/events";
 import EventCover, { TypePill } from "./EventCover";
@@ -25,7 +25,7 @@ export function Progress({ value, label }: { value: number; label: string }) {
 }
 
 /** Compact menu — primary actions (Archive/Capture) moved to the drag dock */
-function Menu({ e, onOpen }: { e: HiveEvent; onOpen: () => void }) {
+function Menu({ e }: { e: HiveEvent }) {
   const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -40,8 +40,7 @@ function Menu({ e, onOpen }: { e: HiveEvent; onOpen: () => void }) {
       <button onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} aria-label={`Actions for ${e.title}`} className="grid h-7 w-7 place-items-center rounded-full text-mute hover:bg-white/10 hover:text-[var(--text)]"><MoreVertical size={16} aria-hidden /></button>
       {open && (
         <div role="menu" className="card absolute right-0 top-8 z-30 w-52 rounded-xl! p-1.5">
-          <button role="menuitem" className={item} onClick={() => { setOpen(false); onOpen(); }}><ExternalLink size={14} aria-hidden /> Open event</button>
-          <p className="px-2.5 pb-1 pt-2 text-[10.5px] leading-tight text-mute">⠿ Drag the card to Archive or Capture into this event</p>
+          <p className="px-2.5 py-2 text-[10.5px] leading-tight text-mute">Drag this event card to Open, Capture, Archive or Restore.</p>
         </div>)}
     </div>
   );
@@ -52,13 +51,13 @@ const Stat = ({ I, n, label }: { I: typeof Lightbulb; n: number; label: string }
 );
 
 type Props = { e: HiveEvent; status: EventStatus; stats: EventStats; now: number; layout: "grid" | "row"; index: number;
-  onOpen: () => void; onCapture: () => void; onArchive: () => void };
+ };
 
-export default function EventCard({ e, status, stats, now, layout, index, onOpen }: Props) {
+export default function EventCard({ e, status, stats, now, layout, index }: Props) {
   const tint = status === "active" ? "#1FBF8F55" : "var(--line)";
   const common = { style: { "--tint": tint } as React.CSSProperties };
-  const menu = <Menu e={e} onOpen={onOpen} />;
-  const title = <button onClick={onOpen} className="truncate text-left text-[14px] font-bold leading-tight after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-2xl">{e.title}</button>;
+  const menu = <Menu e={e} />;
+  const title = <span className="min-w-0 truncate text-[14px] font-bold leading-tight">{e.title}</span>;
   const meta = (
     <>
       <p className="mt-2 flex items-center gap-1.5 text-[11px] text-mute"><CalendarDays size={12} className="shrink-0" aria-hidden /><span className="truncate">{dateRange(e)}</span></p>

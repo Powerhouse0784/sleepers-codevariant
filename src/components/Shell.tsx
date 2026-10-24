@@ -28,6 +28,7 @@ import CreateEventDialog from "./events/CreateEventDialog";
 import IdeaDrawer from "./ideas/IdeaDrawer";
 import DragLayer from "./canvas/DragLayer";
 import { ActionIntentDock } from "./canvas/ActionIntent";
+import { HiveDock } from "./hive/HiveZones";
 
 export const NAV = [
   { href: "/", label: "Daily Buzz", Icon: Home },
@@ -188,7 +189,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             {MORE.map(({ href, label, Icon }) => <Link key={href} href={href} aria-current={path === href ? "page" : undefined} className="flex flex-col items-center gap-1.5 rounded-2xl border border-line px-1 py-3 text-center text-[11.5px] leading-tight text-mute aria-[current=page]:border-honey aria-[current=page]:text-honey"><Icon size={22} aria-hidden />{label}</Link>)}
           </motion.div></>)}</AnimatePresence>
         {ready && path !== "/" && <BuddyFab />}
-        <EventDrawer /><IdeaDrawer /><ActionIntentDock /><DragLayer /><DetailDrawer /><QuickCapture /><CreateEventDialog /><Effects /><Fx /><CommandPalette />
+        <EventDrawer /><IdeaDrawer /><ActionIntentDock /><HiveDock /><DragLayer /><DetailDrawer /><QuickCapture /><CreateEventDialog /><Effects /><Fx /><CommandPalette />
       </div>
     </MotionConfig>
   );

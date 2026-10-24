@@ -38,7 +38,7 @@ function Chip({ i, now, full }: { i: CalItem; now: number; full?: boolean }) {
       <div title={`${i.title}, ${itemTime(i)}`} aria-label={`${i.title}, ${itemTime(i)}`} className={`group flex w-full items-center gap-1.5 rounded-lg border px-1.5 py-1 text-left transition ${isPast(i, now) ? "opacity-55" : ""}`} style={{ borderColor: `${c}aa`, background: `linear-gradient(135deg, ${c}40, ${c}18)`, boxShadow: `0 0 14px -6px ${c}` }}>
         <span className="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full text-white" style={{ background: c }}><I size={10} aria-hidden /></span>
         <span className="min-w-0 leading-[1.15]"><span className={`block text-[11.5px] font-semibold ${full ? "" : "truncate"}`}>{i.short && !full ? i.short : i.title}</span><span className="block text-[10px] text-white/70">{itemTime(i)}</span></span>
-      </button>
+      </div>
     </Draggable>
   );
 }
@@ -101,8 +101,8 @@ function DayView({ all, cursor, now }: { all: CalItem[]; cursor: number; now: nu
             <div className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${isPast(i, now) ? "opacity-60" : ""}`} style={{ borderColor: `${c}99`, background: `linear-gradient(135deg, ${c}33, ${c}0f)` }}>
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-white" style={{ background: c }}><I size={17} aria-hidden /></span>
               <span className="min-w-0 flex-1 leading-tight"><span className="block truncate text-[14px] font-semibold">{i.title}</span><span className="block truncate text-[12px] text-white/70">{itemTime(i)}{i.where ? ` • ${i.where}` : ""}</span></span>
-              <span className="shrink-0 text-[10px] text-mute/60 select-none" aria-hidden>⠿ drag</span>
-            </button>
+              <span className="shrink-0 text-[10px] text-mute/60 select-none" aria-hidden>⠿ drag to action zone</span>
+            </div>
           </Draggable>
         </li>; })}</ul>)}</div>
   );

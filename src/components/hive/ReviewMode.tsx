@@ -32,7 +32,7 @@ export default function ReviewMode({ queue, now, onClose }: { queue: Cell[]; now
             <div className="mt-4 flex flex-wrap gap-2">
               <ActionIntentCard label={`Revive ${c.title}`} hint="Record a next step and revive this item" onExecute={() => { if (!step.trim()) { toast("Add a next step first."); return; } touch(c.id, `Revived: ${step.trim()}`, now); go("r"); }}><div className={`btn-gold inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm ${!step.trim() ? "opacity-50" : ""}`}><RotateCw size={15} aria-hidden /> Revive</div></ActionIntentCard>
               <ActionIntentCard label={`Archive ${c.title}`} hint="Move this item to the archive" onExecute={() => { archive(c.id, now); go("a"); }}><div className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-sm"><Archive size={15} aria-hidden /> Archive</div></ActionIntentCard>
-              <button onClick={() => go("s")} className="ml-auto inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm text-mute hover:bg-white/5"><SkipForward size={15} aria-hidden /> Skip</button>
+              <ActionIntentCard label={`Skip ${c.title}`} hint="Leave this item unchanged and continue" onExecute={() => go("s")} className="ml-auto"><div className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm text-mute"><SkipForward size={15} aria-hidden /> Skip</div></ActionIntentCard>
             </div></motion.div></AnimatePresence>)}
       </motion.div>
     </motion.div>

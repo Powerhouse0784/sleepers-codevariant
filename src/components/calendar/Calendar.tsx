@@ -115,7 +115,7 @@ function MissedBanner({ onClick }: { onClick: () => void }) {
       <img src="/calendar/missed-city.webp" alt="" width={360} height={70} className="absolute inset-y-0 right-0 -z-10 hidden h-full w-auto max-w-none select-none opacity-90 md:block" draggable={false} style={mask(30)} />
       <span className="grid h-12 w-12 shrink-0 -rotate-6 place-items-center rounded-xl border border-white/20 bg-gradient-to-br from-[#4f7cff] to-[#2f56d8] shadow-[0_0_18px_rgba(79,124,255,.6)]"><CalendarCheck size={26} aria-hidden /></span>
       <div className="min-w-0 flex-1"><h2 id="cal-missed" className="text-[17px] font-semibold leading-tight sm:text-[20px]">Missed something?</h2><p className="mt-0.5 text-[12px] text-white/85 sm:text-[13px]">Catch up on past events, replays, and resources.</p></div>
-      <button onClick={onClick} className="btn-gold relative z-10 inline-flex shrink-0 items-center gap-2 px-4 py-2 text-[13px]">View Past Events <ArrowRight size={14} aria-hidden /></button>
+      <ActionIntentCard label="View past events" onExecute={onClick} className="relative z-10 shrink-0"><div className="btn-gold rounded-xl px-4 py-2 text-[13px]">View Past Events <ArrowRight size={14} aria-hidden /></div></ActionIntentCard>
     </section>
   );
 }
@@ -155,7 +155,7 @@ export default function Calendar() {
               </motion.div></AnimatePresence>
             </div>
             {q.trim() && !shown.length && <div className="grid place-items-center gap-2 px-6 py-8 text-center"><SearchX size={26} className="text-mute" aria-hidden /><p className="text-[14px] font-semibold">Nothing matches “{q.trim()}”</p></div>}
-            {!q.trim() && !inRange && view === "month" && <p className="mt-3 text-center text-[12.5px] text-mute">Nothing scheduled this month. <button onClick={() => setCreate(true)} className="font-medium text-primary hover:underline">Add an event</button></p>}
+            {!q.trim() && !inRange && view === "month" && <p className="mt-3 text-center text-[12.5px] text-mute">Nothing scheduled this month. <ActionIntentCard label="Add event" onExecute={() => setCreate(true)}><span className="font-medium text-primary underline">Add an event (drag to execute)</span></ActionIntentCard></p>}
             <p className="mt-2.5 text-[10.5px] text-mute">Shows your events, due dates and joined challenges, plus a sample schedule for the demo. Tap a sample entry to add it to your events.</p>
           </section>
           <MissedBanner onClick={() => setPast(true)} />

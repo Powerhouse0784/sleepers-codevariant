@@ -9,7 +9,7 @@ import { usePeople, usePeopleUI } from "@/lib/peopleStore";
 import { useNow } from "@/lib/hooks";
 import { SECTIONS, SOCIAL_META, monthYear, socialHref, tzLabel, viewLabel, type NotifPrefs, type Section, type SocialKey } from "@/features/settings/settings";
 import { FeedAvatar, useFeed } from "../actions/ActionRail";
-import Draggable from "../canvas/Draggable";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 import { settingsCard } from "./SettingsZones";
 
 export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {

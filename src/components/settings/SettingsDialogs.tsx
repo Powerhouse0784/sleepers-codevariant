@@ -49,7 +49,7 @@ function SocialForm({ k, onDone }: { k: SocialKey; onDone: () => void }) {
     <form onSubmit={submit} className="space-y-3">
       <Field id="soc" label={SOCIAL_META[k].label} hint={`Accepts ${SOCIAL_META[k].hint}.`}><input id="soc" value={v} onChange={(e) => { setV(e.target.value); setErr(""); }} autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="url" className="field w-full px-3 py-2.5 text-[14px]" aria-invalid={!!err} aria-describedby={err ? "soc-err" : undefined} /></Field>
       {err && <p id="soc-err" role="alert" className="text-[12.5px] text-[#ff7a7a]">{err}</p>}
-      <div className="flex items-center justify-between gap-2 pt-1">{cur ? <button type="button" onClick={() => { setSocial(k, ""); toast(`${SOCIAL_META[k].label} removed.`); onDone(); }} className="text-[12.5px] text-[#ff7a7a] hover:underline">Remove</button> : <span />}
+      <div className="flex items-center justify-between gap-2 pt-1">{cur ? <ActionIntentCard label="Remove social link" hint={`Remove ${SOCIAL_META[k].label}`} onExecute={() => { setSocial(k, ""); toast(`${SOCIAL_META[k].label} removed.`); onDone(); }}><div className="rounded-lg px-2 py-2 text-[12.5px] text-[#ff7a7a]">Remove</div></ActionIntentCard> : <span />}
         <span className="flex gap-2"><button type="button" onClick={onDone} className="btn-blue px-4 py-2 text-[13px]">Cancel</button><ActionIntentCard label="Save social link" hint="Save this social link" onExecute={save}><div className="btn-gold rounded-xl px-5 py-2 text-center text-[13px]">Save</div></ActionIntentCard></span></div>
     </form>
   );

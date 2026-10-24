@@ -13,6 +13,7 @@ import MomentumBadge from "../MomentumBadge";
 import { CountUp, ago } from "./bits";
 import type { Cell, Kind } from "@/types";
 import Draggable from "../canvas/Draggable";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 import { quickActionCard, DashboardDock } from "./DashboardZones";
 
 const DAY = 864e5;

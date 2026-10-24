@@ -42,14 +42,16 @@ export default function Hive({ cells, nowMs, selectedId, size = 38 }: {
     useCanvas.getState().begin(hiveCellCard(cell), e.clientX, e.clientY, "pointer", origin);
     document.body.classList.add("canvas-dragging");
     const move = (ev: PointerEvent) => useCanvas.getState().move(ev.clientX, ev.clientY, zoneAt(ev.clientX, ev.clientY));
+    let up: (ev: PointerEvent) => void = () => {};
+    let cancel: () => void = () => {};
     const cleanup = () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", cancel);
       document.body.classList.remove("canvas-dragging");
     };
-    const up = () => { cleanup(); commitDrag(true); };
-    const cancel = () => { cleanup(); commitDrag(false); };
+    up = (ev) => { useCanvas.getState().move(ev.clientX, ev.clientY, zoneAt(ev.clientX, ev.clientY)); cleanup(); commitDrag(true); };
+    cancel = () => { cleanup(); commitDrag(false); };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up, { once: true });
     window.addEventListener("pointercancel", cancel, { once: true });

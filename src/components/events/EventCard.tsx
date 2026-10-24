@@ -36,7 +36,7 @@ function Menu() {
   }, [open]);
   return (
     <div ref={ref} className="relative z-10 shrink-0" data-no-drag>
-      <button onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} aria-label={`Actions for ${e.title}`} className="grid h-7 w-7 place-items-center rounded-full text-mute hover:bg-white/10 hover:text-[var(--text)]"><MoreVertical size={16} aria-hidden /></button>
+      <button onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} aria-label="Event actions" className="grid h-7 w-7 place-items-center rounded-full text-mute hover:bg-white/10 hover:text-[var(--text)]"><MoreVertical size={16} aria-hidden /></button>
       {open && (
         <div role="menu" className="card absolute right-0 top-8 z-30 w-52 rounded-xl! p-1.5">
           <p className="px-2.5 py-2 text-[10.5px] leading-tight text-mute">Drag this event card to Open, Capture, Archive or Restore.</p>

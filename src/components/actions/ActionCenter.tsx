@@ -8,6 +8,7 @@ import { useIdeasUI } from "@/lib/ideasStore";
 import { usePeopleUI } from "@/lib/peopleStore";
 import { useUI } from "@/lib/store";
 import Draggable from "../canvas/Draggable";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 import { oppCard, ActionDock } from "./ActionZones";
 import { useMedia, useNow } from "@/lib/hooks";
 import { KIND_COLOR, KIND_LABEL, OPPORTUNITIES, levelOf, matches, participantsOf, whenOf, xpOf, type JoinMap, type OppKind, type Opportunity } from "@/features/actions/actions";
@@ -48,7 +49,7 @@ function QuickCard({ I, c, title, blurb, cta, onClick }: { I: LucideIcon; c: str
       <span className="grid h-[54px] w-[54px] place-items-center rounded-full border-2" style={{ borderColor: c, background: `${c}22`, color: c, boxShadow: `0 0 20px ${c}66` }}><I size={26} aria-hidden /></span>
       <h2 className="mt-2.5 text-[17px] font-semibold leading-tight">{title}</h2>
       <p className="mt-1 min-h-[36px] text-[12.5px] leading-snug text-mute">{blurb}</p>
-      <button onClick={onClick} className="btn-blue mt-3 inline-flex w-full items-center justify-center gap-2 py-2 text-[12.5px]">{cta}<ArrowRight size={13} aria-hidden /></button>
+      <ActionIntentCard label={title} hint={cta} onExecute={onClick} className="mt-3 w-full"><div className="btn-blue flex w-full items-center justify-center gap-2 rounded-xl py-2 text-[12.5px]">{cta}<ArrowRight size={13} aria-hidden /></div></ActionIntentCard>
     </li>
   );
 }

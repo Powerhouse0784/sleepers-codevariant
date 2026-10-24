@@ -68,14 +68,9 @@ main :is(.grid, [class*="grid-cols-"]) {
 }
 
 @media (max-width: 1023px) {
-  /* Avoid fixed-width children forcing the whole page wider than the viewport. */
   main {
     width: 100%;
     min-width: 0;
-  }
-
-  main :is(.grid-cols-4, .grid-cols-5, .grid-cols-6, .grid-cols-7) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   main :is(.w-screen, .min-w-max) {
@@ -92,7 +87,7 @@ main :is(.grid, [class*="grid-cols-"]) {
     font-size: 15px;
   }
 
-  /* Shell header search and actions must be allowed to shrink on phones. */
+  /* Let the shell's search field shrink instead of pushing actions off-screen. */
   header {
     min-width: 0;
     gap: 0.5rem;
@@ -104,15 +99,11 @@ main :is(.grid, [class*="grid-cols-"]) {
 
   header input {
     min-width: 0;
-    font-size: 16px; /* Prevent iOS Safari from zooming on focus. */
+    font-size: 16px;
   }
 
   main {
     padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
-  }
-
-  main :is(.grid-cols-3, .grid-cols-4, .grid-cols-5, .grid-cols-6, .grid-cols-7) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   main :is(.gap-8, .gap-10, .gap-12) {
@@ -133,7 +124,6 @@ main :is(.grid, [class*="grid-cols-"]) {
     border-radius: 16px;
   }
 
-  /* Keep wide data views usable without letting them widen the whole page. */
   main :is(table, [role="table"]) {
     display: block;
     width: 100%;
@@ -142,27 +132,16 @@ main :is(.grid, [class*="grid-cols-"]) {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Dialogs, popovers, and floating panels should fit inside the viewport. */
   [role="dialog"], .card[class*="fixed"], .card[class*="absolute"] {
     max-width: calc(100vw - 1.5rem);
   }
 
-  /* Reserve room for the floating mobile navigation and device safe area. */
   nav[aria-label="Mobile"] {
     bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 480px) {
-  main :is(.grid-cols-2, .grid-cols-3, .grid-cols-4, .grid-cols-5, .grid-cols-6, .grid-cols-7) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  /* Explicitly keep the five-item bottom navigation in one row. */
-  nav[aria-label="Mobile"].grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
   main :is(.p-8, .p-10, .p-12) {
     padding: 1rem;
   }
@@ -172,7 +151,6 @@ main :is(.grid, [class*="grid-cols-"]) {
     line-height: 1.1;
   }
 
-  /* Small action groups can wrap rather than collide or clip. */
   main :is(.flex-row) {
     flex-wrap: wrap;
   }

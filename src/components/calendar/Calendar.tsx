@@ -11,6 +11,7 @@ import { CAT_COLOR, WEEKDAYS, addDays, addMonths, buildItems, dayTitle, isPast, 
 import { ItemDialog, ListDialog, PromoCard, QuickActions, TodayPanel, UpcomingPanel } from "./CalendarRail";
 import Draggable from "../canvas/Draggable";
 import { CalendarDock, calItemCard } from "./CalendarZones";
+import { ActionIntentCard } from "../canvas/ActionIntent";
 
 const CAT_ICON: Record<CalItem["cat"], LucideIcon> = { workshop: Sparkles, challenge: Flag, meeting: Video, idea: Heart, webinar: Mic };
 const mask = (stop: number) => ({ maskImage: `linear-gradient(90deg,transparent,#000 ${stop}%)`, WebkitMaskImage: `linear-gradient(90deg,transparent,#000 ${stop}%)` });
@@ -31,12 +32,10 @@ function Hero() {
 }
 
 function Chip({ i, now, full }: { i: CalItem; now: number; full?: boolean }) {
-  const open = useCalendarUI((s) => s.open); const c = CAT_COLOR[i.cat]; const I = CAT_ICON[i.cat];
+  const c = CAT_COLOR[i.cat]; const I = CAT_ICON[i.cat];
   return (
     <Draggable label={i.title} payload={() => calItemCard(i)} className="w-full">
-      <button onClick={(e) => { e.stopPropagation(); open(i.id); }} title={`${i.title}, ${itemTime(i)}`} aria-label={`${i.title}, ${itemTime(i)}`}
-        className={`group flex w-full items-center gap-1.5 rounded-lg border px-1.5 py-1 text-left transition hover:brightness-125 ${isPast(i, now) ? "opacity-55" : ""}`}
-        style={{ borderColor: `${c}aa`, background: `linear-gradient(135deg, ${c}40, ${c}18)`, boxShadow: `0 0 14px -6px ${c}` }}>
+      <div title={`${i.title}, ${itemTime(i)}`} aria-label={`${i.title}, ${itemTime(i)}`} className={`group flex w-full items-center gap-1.5 rounded-lg border px-1.5 py-1 text-left transition ${isPast(i, now) ? "opacity-55" : ""}`} style={{ borderColor: `${c}aa`, background: `linear-gradient(135deg, ${c}40, ${c}18)`, boxShadow: `0 0 14px -6px ${c}` }}>
         <span className="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full text-white" style={{ background: c }}><I size={10} aria-hidden /></span>
         <span className="min-w-0 leading-[1.15]"><span className={`block text-[11.5px] font-semibold ${full ? "" : "truncate"}`}>{i.short && !full ? i.short : i.title}</span><span className="block text-[10px] text-white/70">{itemTime(i)}</span></span>
       </button>
@@ -90,16 +89,16 @@ function WeekView({ all, cursor, now, go }: { all: CalItem[]; cursor: number; no
 }
 
 function DayView({ all, cursor, now }: { all: CalItem[]; cursor: number; now: number }) {
-  const open = useCalendarUI((s) => s.open); const setCreate = useUI((s) => s.setCreateEvent); const items = itemsOn(all, cursor);
+  const setCreate = useUI((s) => s.setCreateEvent); const items = itemsOn(all, cursor);
   return (
     <div className="rounded-xl border border-line p-3 sm:p-4">
       <div className="flex items-center justify-between gap-3"><h3 className="text-[15px] font-semibold">{dayTitle(cursor)}{sameDay(cursor, now) && <span className="ml-2 rounded-full bg-honey/15 px-2 py-0.5 align-middle text-[10.5px] font-semibold text-honey">Today</span>}</h3>
-        <button onClick={() => setCreate(true)} className="btn-blue inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-[12px]"><Plus size={13} aria-hidden /> Add event</button></div>
+        <ActionIntentCard label="Add event" hint="Create a new calendar event" onExecute={() => setCreate(true)}><div className="btn-blue rounded-xl px-3 py-1.5 text-center text-[12px]"><Plus size={13} aria-hidden /> Add event</div></ActionIntentCard></div>
       {items.length === 0 ? <div className="grid place-items-center gap-2 px-6 py-14 text-center"><CalendarCheck size={30} className="text-mute" aria-hidden /><p className="text-[15px] font-semibold">Nothing planned</p><p className="max-w-xs text-[13px] text-mute">A clear day. Add an event or join a challenge to fill it.</p></div> : (
       <ul className="mt-3 space-y-2">{items.map((i) => { const c = CAT_COLOR[i.cat]; const I = CAT_ICON[i.cat];
         return <li key={i.id}>
           <Draggable label={i.title} payload={() => calItemCard(i)} className="w-full">
-            <button onClick={() => open(i.id)} className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition hover:brightness-125 ${isPast(i, now) ? "opacity-60" : ""}`} style={{ borderColor: `${c}99`, background: `linear-gradient(135deg, ${c}33, ${c}0f)` }}>
+            <div className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${isPast(i, now) ? "opacity-60" : ""}`} style={{ borderColor: `${c}99`, background: `linear-gradient(135deg, ${c}33, ${c}0f)` }}>
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-white" style={{ background: c }}><I size={17} aria-hidden /></span>
               <span className="min-w-0 flex-1 leading-tight"><span className="block truncate text-[14px] font-semibold">{i.title}</span><span className="block truncate text-[12px] text-white/70">{itemTime(i)}{i.where ? ` • ${i.where}` : ""}</span></span>
               <span className="shrink-0 text-[10px] text-mute/60 select-none" aria-hidden>⠿ drag</span>

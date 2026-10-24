@@ -10,6 +10,8 @@ import EventsHero from "./EventsHero";
 import EventCard from "./EventCard";
 import { KeepAlive, RecentlyRevisited } from "./BuzzRail";
 import Hex from "./Hex";
+import Draggable from "../canvas/Draggable";
+import { EventDock, eventCard } from "./EventZones";
 
 const PAGE = 6;
 
@@ -98,8 +100,10 @@ export default function Events() {
             <motion.ul layout className={`mt-3 grid gap-3 ${layout === "grid" ? "grid-cols-3" : view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
               <AnimatePresence initial={false}>
                 {visible.map(({ e, status, stats }, i) => (
-                  <li key={e.id} className="min-w-0 [&>article]:h-full">
-                    <EventCard e={e} status={status} stats={stats} now={now} layout={layout} index={i} onOpen={() => openEvent(e.id)} onCapture={() => setCapture(true, "idea", e.id)} onArchive={() => setEventArchived(e.id, status !== "archived", Date.now())} />
+                  <li key={e.id} className="min-w-0 [&>*]:h-full">
+                    <Draggable label={e.title} payload={() => eventCard(e.id, e.title, e.type)} className="h-full">
+                      <EventCard e={e} status={status} stats={stats} now={now} layout={layout} index={i} onOpen={() => openEvent(e.id)} onCapture={() => setCapture(true, "idea", e.id)} onArchive={() => setEventArchived(e.id, status !== "archived", Date.now())} />
+                    </Draggable>
                   </li>))}
               </AnimatePresence>
             </motion.ul>)}
@@ -110,6 +114,7 @@ export default function Events() {
       </div>
 
       {!wide && <div className="grid items-start gap-3 md:grid-cols-2"><KeepAlive compact now={now} /><RecentlyRevisited now={now} onViewAll={reset} /></div>}
+      <EventDock />
     </div>
   );
 }

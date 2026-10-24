@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Lightbulb, CalendarCheck, Users, UserPlus, ListPlus, StickyNote, ChevronRight, MapPin, CalendarDays, Clock, Flame, UserRound, CheckCircle2, FileText } from "lucide-react";
+import { Lightbulb, CalendarCheck, Users, UserPlus, ListPlus, StickyNote, ChevronRight, MapPin, CalendarDays, Clock, Flame, UserRound, CheckCircle2, FileText, GripVertical } from "lucide-react";
 import { useStore, useUI } from "@/lib/store";
 import { useNow } from "@/lib/hooks";
 import { getMomentum } from "@/features/momentum/momentum";
@@ -12,6 +12,8 @@ import { BuddyBubble, useBuddy } from "../Buddy";
 import MomentumBadge from "../MomentumBadge";
 import { CountUp, ago } from "./bits";
 import type { Cell, Kind } from "@/types";
+import Draggable from "../canvas/Draggable";
+import { quickActionCard, DashboardDock } from "./DashboardZones";
 
 const DAY = 864e5;
 const LEGEND = [

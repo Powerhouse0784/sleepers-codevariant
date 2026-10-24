@@ -55,7 +55,7 @@ export function Promo({ onShare }: { onShare: () => void }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/ideas/promo-bee.webp" alt="" width={106} height={212} className="absolute bottom-0 right-0 -z-10 h-full w-auto max-w-none select-none" style={{ maskImage: "linear-gradient(90deg,transparent,#000 40%)", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 40%)" }} draggable={false} />
       <p className="script max-w-[200px] -rotate-3 text-[23px] leading-[1.1]">Every great idea starts with a single thought.</p>
-      <button onClick={onShare} className="btn-gold mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px]"><Plus size={14} aria-hidden /> Share Your Idea</button>
+      <button onClick={onShare} className="btn-gold mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px]"><Plus size={14} aria-hidden /> Start an Idea</button>
     </section>
   );
 }

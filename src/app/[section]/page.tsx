@@ -1,8 +1,6 @@
 import Link from "next/link";
 const COPY: Record<string, [string, string]> = {
   events: ["Events", "Your event spaces, with notes, people and actions for each one."],
-  knowledge: ["Knowledge Base", "Takeaways and resources from every event."],
-  settings: ["Settings", "Theme, privacy and your data."],
 };
 export function generateStaticParams() { return Object.keys(COPY).map((section) => ({ section })); }
 export default async function Page({ params }: { params: Promise<{ section: string }> }) {

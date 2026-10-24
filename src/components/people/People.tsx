@@ -11,6 +11,7 @@ import ProfileDialog from "./ProfileDialog";
 import JoinStrip from "./JoinStrip";
 import { CommunityStats, TopContributors, FindTribe, ContributorsDialog } from "./PeopleRail";
 import { useMedia } from "@/lib/hooks";
+import { PeopleDock } from "./PeopleZones";
 
 const PAGE = 8;
 const TABS: { k: Tab; I: LucideIcon }[] = [{ k: "all", I: Users }, { k: "students", I: GraduationCap }, { k: "creators", I: Sparkles }, { k: "mentors", I: UserCheck }, { k: "experts", I: ShieldCheck }, { k: "teams", I: Users }, { k: "followed", I: Star }];
@@ -64,6 +65,7 @@ export default function People() {
       </div>
       {!wide && <div className="grid items-start gap-3 md:grid-cols-2"><div className="space-y-3"><CommunityStats all={people} /><TopContributors all={people} /></div><FindTribe onClick={tribe} /></div>}
       <PersonDrawer /><ContributorsDialog all={people} /><ProfileDialog />
+      <PeopleDock />
     </div>
   );
 }

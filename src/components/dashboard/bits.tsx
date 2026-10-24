@@ -5,7 +5,7 @@ import { animate } from "motion/react";
 export function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
   const [v, setV] = useState(0);
   useEffect(() => { const c = animate(0, to, { duration: 1.1, ease: "easeOut", onUpdate: (x) => setV(Math.round(x)) }); return () => c.stop(); }, [to]);
-  return <>{v}{suffix}</>;
+  return <span className="tabular-nums">{v}{suffix}</span>;
 }
 export function ago(iso: string, nowMs: number) {
   const m = Math.max(0, (nowMs - Date.parse(iso)) / 6e4);

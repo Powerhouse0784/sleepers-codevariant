@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { CalendarDays, MapPin, MoreVertical, Lightbulb, Users, Zap, Plus, Archive, ArchiveRestore, ExternalLink, Clock } from "lucide-react";
+import { CalendarDays, MapPin, MoreVertical, Lightbulb, Users, Zap, ExternalLink, Clock } from "lucide-react";
 import type { HiveEvent } from "@/types";
 import { dateRange, startsIn, type EventStats, type EventStatus } from "@/features/events/events";
 import EventCover, { TypePill } from "./EventCover";
@@ -24,7 +24,8 @@ export function Progress({ value, label }: { value: number; label: string }) {
   );
 }
 
-function Menu({ e, archived, onOpen, onCapture, onArchive }: { e: HiveEvent; archived: boolean; onOpen: () => void; onCapture: () => void; onArchive: () => void }) {
+/** Compact menu — primary actions (Archive/Capture) moved to the drag dock */
+function Menu({ e, onOpen }: { e: HiveEvent; onOpen: () => void }) {
   const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -35,13 +36,12 @@ function Menu({ e, archived, onOpen, onCapture, onArchive }: { e: HiveEvent; arc
   }, [open]);
   const item = "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[12.5px] hover:bg-white/5";
   return (
-    <div ref={ref} className="relative z-10 shrink-0">
+    <div ref={ref} className="relative z-10 shrink-0" data-no-drag>
       <button onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} aria-label={`Actions for ${e.title}`} className="grid h-7 w-7 place-items-center rounded-full text-mute hover:bg-white/10 hover:text-[var(--text)]"><MoreVertical size={16} aria-hidden /></button>
       {open && (
-        <div role="menu" className="card absolute right-0 top-8 z-30 w-44 rounded-xl! p-1.5">
+        <div role="menu" className="card absolute right-0 top-8 z-30 w-52 rounded-xl! p-1.5">
           <button role="menuitem" className={item} onClick={() => { setOpen(false); onOpen(); }}><ExternalLink size={14} aria-hidden /> Open event</button>
-          {!archived && <button role="menuitem" className={item} onClick={() => { setOpen(false); onCapture(); }}><Plus size={14} aria-hidden /> Capture here</button>}
-          <button role="menuitem" className={item} onClick={() => { setOpen(false); onArchive(); }}>{archived ? <ArchiveRestore size={14} aria-hidden /> : <Archive size={14} aria-hidden />} {archived ? "Restore event" : "Archive event"}</button>
+          <p className="px-2.5 pb-1 pt-2 text-[10.5px] leading-tight text-mute">⠿ Drag the card to Archive or Capture into this event</p>
         </div>)}
     </div>
   );
@@ -54,10 +54,10 @@ const Stat = ({ I, n, label }: { I: typeof Lightbulb; n: number; label: string }
 type Props = { e: HiveEvent; status: EventStatus; stats: EventStats; now: number; layout: "grid" | "row"; index: number;
   onOpen: () => void; onCapture: () => void; onArchive: () => void };
 
-export default function EventCard({ e, status, stats, now, layout, index, onOpen, onCapture, onArchive }: Props) {
+export default function EventCard({ e, status, stats, now, layout, index, onOpen }: Props) {
   const tint = status === "active" ? "#1FBF8F55" : "var(--line)";
   const common = { style: { "--tint": tint } as React.CSSProperties };
-  const menu = <Menu e={e} archived={status === "archived"} onOpen={onOpen} onCapture={onCapture} onArchive={onArchive} />;
+  const menu = <Menu e={e} onOpen={onOpen} />;
   const title = <button onClick={onOpen} className="truncate text-left text-[14px] font-bold leading-tight after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-2xl">{e.title}</button>;
   const meta = (
     <>
@@ -95,6 +95,7 @@ export default function EventCard({ e, status, stats, now, layout, index, onOpen
         <div className="mt-2.5"><StatusPill status={status} /></div>
         <div className="mt-2.5">{progress}</div>
         <div className="mt-3 grid grid-cols-3 gap-1 border-t border-line pt-3"><Stat I={Lightbulb} n={stats.ideas} label="Ideas" /><Stat I={Users} n={stats.people} label="People" /><Stat I={Zap} n={stats.actions} label="Actions" /></div>
+        <p className="mt-2 text-[10px] text-mute/60 select-none" aria-hidden>⠿ drag to archive · capture · open</p>
       </div>
     </motion.article>
   );

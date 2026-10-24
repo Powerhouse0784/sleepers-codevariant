@@ -94,14 +94,13 @@ export function ListDialog({ kind, items, now }: { kind: "upcoming" | "past"; it
 
 export function ItemDialog({ items, now }: { items: CalItem[]; now: number }) {
   const id = useCalendarUI((s) => s.openId), open = useCalendarUI((s) => s.open); const router = useRouter();
-  const { openEvent, select, toast } = useUI(); const addEvent = useStore((s) => s.addEvent);
+  const { openEvent, select } = useUI();
   const i = items.find((x) => x.id === id) ?? null; const c = i ? CAT_COLOR[i.cat] : "#2F8BFF"; const close = () => open(null);
-  const primary = () => {
+  const navigate = () => {
     if (!i) return;
     if (i.src === "event" && i.refId) { close(); openEvent(i.refId); }
     else if (i.src === "task" && i.refId) { close(); select(i.refId); }
     else if (i.src === "joined") { close(); router.push("/actions"); }
-    else { const end = i.allDay ? i.end - 1 : i.end; addEvent({ title: i.title, type: CAT_TYPE[i.cat], startsAt: new Date(i.start).toISOString(), endsAt: new Date(end).toISOString(), venue: i.where }, Date.now()); close(); toast(`“${i.title}” added to your events.`); }
   };
   return (
     <Dialog open={!!i} onClose={close} label="Calendar item">
@@ -114,8 +113,12 @@ export function ItemDialog({ items, now }: { items: CalItem[]; now: number }) {
           {i.where && <li className="flex items-center gap-2"><MapPin size={15} aria-hidden />{i.where}</li>}
         </ul>
         {i.blurb && <p className="mt-3 text-[12.5px] text-mute">{i.blurb}</p>}
-        <button onClick={primary} className="btn-gold mt-5 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[13px]">
-          {i.src === "event" ? <>Open event <ArrowRight size={14} aria-hidden /></> : i.src === "task" ? <>Open item <ArrowRight size={14} aria-hidden /></> : i.src === "joined" ? <>Open Action Center <ArrowRight size={14} aria-hidden /></> : <><Plus size={14} aria-hidden /> Add to my events</>}</button>
+        {i.src === "sample"
+          ? <p className="mt-5 rounded-xl border border-dashed border-honey/50 bg-honey/10 px-3.5 py-2.5 text-center text-[12.5px] text-honey">Close this dialog, then <strong>drag this item</strong> onto the <strong>Add to Events</strong> zone. ⠿</p>
+          : <button onClick={navigate} className="btn-gold mt-5 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[13px]">
+              {i.src === "event" ? <>Open event <ArrowRight size={14} aria-hidden /></> : i.src === "task" ? <>Open item <ArrowRight size={14} aria-hidden /></> : <>Open Action Center <ArrowRight size={14} aria-hidden /></>}
+            </button>
+        }
       </>}
     </Dialog>
   );

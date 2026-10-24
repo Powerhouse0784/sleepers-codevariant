@@ -37,14 +37,19 @@ export const useIdeas = create<IdeasStore>()(
   ),
 );
 
+type Composer = { title: string; summary: string; category: Category };
+const EMPTY: Composer = { title: "", summary: "", category: "tech" };
 type IdeasUI = {
-  shareOpen: boolean; openId: string | null; topOpen: boolean; q: string; category: Category | "all"; scope: Scope;
+  shareOpen: boolean; openId: string | null; topOpen: boolean; q: string; category: Category | "all"; scope: Scope; composer: Composer; commentText: string;
+  /** "shareOpen" now means "take me to the new-idea note": the page scrolls to it and focuses the title, then clears this. */
   setShare: (o: boolean) => void; open: (id: string | null) => void; setTop: (o: boolean) => void;
   setQ: (q: string) => void; setCategory: (c: Category | "all") => void; setScope: (s: Scope) => void; clearFilters: () => void;
+  setComposer: (c: Partial<Composer>) => void; clearComposer: () => void; setCommentText: (t: string) => void;
 };
-/** Screen state shared by the page, the top bar search, and the dialogs. Not persisted. */
+/** Screen state shared by the page, the top bar search and the Action Zones. Not persisted. */
 export const useIdeasUI = create<IdeasUI>((set) => ({
-  shareOpen: false, openId: null, topOpen: false, q: "", category: "all", scope: "all",
-  setShare: (shareOpen) => set({ shareOpen }), open: (openId) => set({ openId }), setTop: (topOpen) => set({ topOpen }),
+  shareOpen: false, openId: null, topOpen: false, q: "", category: "all", scope: "all", composer: EMPTY, commentText: "",
+  setShare: (shareOpen) => set({ shareOpen }), open: (openId) => set({ openId, commentText: "" }), setTop: (topOpen) => set({ topOpen }),
   setQ: (q) => set({ q }), setCategory: (category) => set({ category }), setScope: (scope) => set({ scope }), clearFilters: () => set({ q: "", category: "all", scope: "all" }),
+  setComposer: (c) => set((s) => ({ composer: { ...s.composer, ...c } })), clearComposer: () => set({ composer: EMPTY }), setCommentText: (commentText) => set({ commentText }),
 }));

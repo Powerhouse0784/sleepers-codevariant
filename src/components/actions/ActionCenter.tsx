@@ -2,11 +2,13 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { CalendarDays, Trophy, Lightbulb, Users, Star, ArrowRight, Check, X, SearchX, RotateCcw, type LucideIcon } from "lucide-react";
+import { CalendarDays, Trophy, Lightbulb, Users, Star, ArrowRight, SearchX, RotateCcw, type LucideIcon } from "lucide-react";
 import { useActions, useActionsUI } from "@/lib/actionsStore";
 import { useIdeasUI } from "@/lib/ideasStore";
 import { usePeopleUI } from "@/lib/peopleStore";
 import { useUI } from "@/lib/store";
+import Draggable from "../canvas/Draggable";
+import { oppCard, ActionDock } from "./ActionZones";
 import { useMedia, useNow } from "@/lib/hooks";
 import { KIND_COLOR, KIND_LABEL, OPPORTUNITIES, levelOf, matches, participantsOf, whenOf, xpOf, type JoinMap, type OppKind, type Opportunity } from "@/features/actions/actions";
 import { City } from "../ideas/IdeasHero";
@@ -16,21 +18,12 @@ const KIND_ICON: Record<OppKind, LucideIcon> = { event: CalendarDays, challenge:
 const mask = (stop: number) => ({ maskImage: `linear-gradient(90deg,transparent,#000 ${stop}%)`, WebkitMaskImage: `linear-gradient(90deg,transparent,#000 ${stop}%)` });
 const toFeatured = () => document.getElementById("action-featured")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-/** Join / leave / complete, with XP and level-up feedback. XP itself is derived, so this only records what you did. */
+/** Navigation helpers. XP / join / leave actions are handled by the canvas drag zones. */
 function useOppActions() {
-  const router = useRouter(); const { toast, celebrate } = useUI();
-  const act = (o: Opportunity, what: "join" | "leave" | "complete") => {
-    const st = useActions.getState(); const before: JoinMap = st.joined; const now = Date.now();
-    if (what === "join") st.join(o.id, now); else if (what === "leave") st.leave(o.id); else st.complete(o.id, now);
-    const a = levelOf(xpOf(before)), b = levelOf(xpOf(useActions.getState().joined));
-    if (what === "leave") return toast(`You left ${o.title}.`);
-    toast(what === "complete" ? `Challenge complete! +150 XP` : `You joined ${o.title}. +${o.kind === "event" ? 50 : 25} XP`);
-    if (b.level > a.level) { celebrate(); toast(`Level up! You are now Level ${b.level}, ${b.name}.`); }
-  };
-  const openIdea = () => useIdeasUI.getState().setShare(true);
+  const router = useRouter();
   const findTeams = () => { const p = usePeopleUI.getState(); p.clearFilters(); p.setTab("teams"); router.push("/people"); };
   const filterTo = (k: OppKind | "all") => { const u = useActionsUI.getState(); u.setQ(""); u.setFilter(k); u.setExpanded(k !== "all"); setTimeout(toFeatured, 60); };
-  return { act, openIdea, findTeams, filterTo, router };
+  return { findTeams, filterTo, router };
 }
 
 function Hero() {
@@ -60,31 +53,31 @@ function QuickCard({ I, c, title, blurb, cta, onClick }: { I: LucideIcon; c: str
   );
 }
 
-function OppCard({ o, joined, now, act, openIdea, index }: { o: Opportunity; joined: JoinMap; now: number; act: ReturnType<typeof useOppActions>["act"]; openIdea: () => void; index: number }) {
-  const r = joined[o.id]; const c = KIND_COLOR[o.kind]; const KI = KIND_ICON[o.kind]; const pad = "inline-flex w-full items-center justify-center gap-2 py-2 text-[12.5px]";
+function OppCard({ o, joined, now, index }: { o: Opportunity; joined: JoinMap; now: number; index: number }) {
+  const r = joined[o.id]; const c = KIND_COLOR[o.kind]; const KI = KIND_ICON[o.kind];
+  const statusLabel = o.kind === "idea" ? "Drag → Submit Idea" : !r ? `Drag → Join` : o.kind === "event" ? "Joined ✓ • Drag → Leave" : r.done ? "Completed ✓" : "In Progress • Drag → Complete";
+  const statusColor = !r ? c : r.done ? "#1FD18B" : o.kind === "event" ? "#1FD18B" : "#FF9F1C";
   return (
     <motion.li layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ delay: Math.min(index, 7) * 0.04 }} className="min-w-0">
-      <article className="flex h-full flex-col rounded-2xl border border-primary/50 p-2.5 shadow-[0_0_26px_-10px_rgba(35,120,255,.7)]" style={{ background: "linear-gradient(180deg, rgba(35,120,255,.08), transparent 60%), var(--surface)" }}>
-        <div className="relative h-[92px] overflow-hidden rounded-xl" style={{ background: `linear-gradient(135deg, ${c}66, #0b1830 85%)` }}>
-          {o.image
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={o.image} alt="" width={200} height={92} className="h-full w-full object-cover" draggable={false} loading="lazy" />
-            : <><div aria-hidden className="absolute inset-0 bg-[url('/decor/honeycomb.svg')] bg-[length:170px] bg-right-bottom bg-no-repeat opacity-60" /><KI size={44} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/55" aria-hidden /></>}
-          <span className="absolute left-2 top-2 rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-md" style={{ background: c }}>{KIND_LABEL[o.kind]}</span>
-        </div>
-        <h3 className="mt-2.5 text-[15.5px] font-semibold leading-tight">{o.title}</h3>
-        <p className="mt-1 min-h-[34px] text-[12px] leading-snug text-mute">{o.blurb}</p>
-        <p className="mt-2 flex items-center gap-2 text-[11.5px] text-[#9fc2ff]"><CalendarDays size={14} className="shrink-0" aria-hidden /><span className="whitespace-pre">{whenOf(o, now)}</span></p>
-        <p className="mt-1.5 flex items-center gap-2 text-[11.5px] text-[#9fc2ff]"><Users size={14} className="shrink-0" aria-hidden />{participantsOf(o, joined)} participants</p>
-        <div className="mt-auto pt-3">
-          {o.kind === "idea" ? <button onClick={openIdea} className={`btn-blue ${pad}`}>Submit Idea <ArrowRight size={13} aria-hidden /></button>
-            : !r ? <button onClick={() => act(o, "join")} className={`btn-blue ${pad}`}>{o.kind === "event" ? "Join Event" : "Join Challenge"} <ArrowRight size={13} aria-hidden /></button>
-            : o.kind === "event" ? <button onClick={() => act(o, "leave")} aria-label={`Leave ${o.title}`} className={`${pad} rounded-[10px] border border-[#1FD18B]/60 bg-[#1FD18B]/10 font-semibold text-[#1FD18B] transition hover:bg-[#1FD18B]/20`}><Check size={14} aria-hidden /> Joined</button>
-            : r.done ? <span className={`${pad} rounded-[10px] border border-[#1FD18B]/60 bg-[#1FD18B]/10 font-semibold text-[#1FD18B]`}><Check size={14} aria-hidden /> Completed</span>
-            : <div className="flex gap-1.5"><button onClick={() => act(o, "complete")} className={`btn-gold ${pad}`}><Check size={14} aria-hidden /> Mark Complete</button>
-              <button onClick={() => act(o, "leave")} aria-label={`Leave ${o.title}`} title="Leave challenge" className="btn-blue grid w-10 shrink-0 place-items-center"><X size={15} aria-hidden /></button></div>}
-        </div>
-      </article>
+      <Draggable label={o.title} payload={() => oppCard(o)} className="h-full">
+        <article className="flex h-full flex-col rounded-2xl border border-primary/50 p-2.5 shadow-[0_0_26px_-10px_rgba(35,120,255,.7)]" style={{ background: "linear-gradient(180deg, rgba(35,120,255,.08), transparent 60%), var(--surface)" }}>
+          <div className="relative h-[92px] overflow-hidden rounded-xl" style={{ background: `linear-gradient(135deg, ${c}66, #0b1830 85%)` }}>
+            {o.image
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={o.image} alt="" width={200} height={92} className="h-full w-full object-cover" draggable={false} loading="lazy" />
+              : <><div aria-hidden className="absolute inset-0 bg-[url('/decor/honeycomb.svg')] bg-[length:170px] bg-right-bottom bg-no-repeat opacity-60" /><KI size={44} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/55" aria-hidden /></>}
+            <span className="absolute left-2 top-2 rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-md" style={{ background: c }}>{KIND_LABEL[o.kind]}</span>
+          </div>
+          <h3 className="mt-2.5 text-[15.5px] font-semibold leading-tight">{o.title}</h3>
+          <p className="mt-1 min-h-[34px] text-[12px] leading-snug text-mute">{o.blurb}</p>
+          <p className="mt-2 flex items-center gap-2 text-[11.5px] text-[#9fc2ff]"><CalendarDays size={14} className="shrink-0" aria-hidden /><span className="whitespace-pre">{whenOf(o, now)}</span></p>
+          <p className="mt-1.5 flex items-center gap-2 text-[11.5px] text-[#9fc2ff]"><Users size={14} className="shrink-0" aria-hidden />{participantsOf(o, joined)} participants</p>
+          <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+            <span className="text-[11px] font-medium" style={{ color: statusColor }}>{statusLabel}</span>
+            <span className="text-[10px] text-mute/50 select-none" aria-hidden>⠿ drag</span>
+          </div>
+        </article>
+      </Draggable>
     </motion.li>
   );
 }
@@ -93,7 +86,7 @@ const CHIPS: { k: OppKind | "all"; label: string }[] = [{ k: "all", label: "All"
 
 export default function ActionCenter() {
   const wide = useMedia("(min-width: 1280px)"); const now = useNow(); const joined = useActions((s) => s.joined);
-  const { q, filter, expanded, setFilter, setExpanded, clear } = useActionsUI(); const { act, openIdea, findTeams, filterTo, router } = useOppActions();
+  const { q, filter, expanded, setFilter, setExpanded, clear } = useActionsUI(); const { findTeams, filterTo, router } = useOppActions();
   const list = useMemo(() => OPPORTUNITIES.filter((o) => (filter === "all" || o.kind === filter) && matches(o, q)), [filter, q]);
   const open = expanded || filter !== "all" || !!q.trim(); const shown = open ? list : list.slice(0, 4);
   const community = () => { usePeopleUI.getState().clearFilters(); router.push("/people"); };
@@ -107,7 +100,7 @@ export default function ActionCenter() {
           <ul className="grid grid-cols-2 gap-3 @3xl:grid-cols-4" aria-label="Quick actions">
             <QuickCard I={CalendarDays} c="#2F8BFF" title="Upcoming Events" blurb="Discover and join exciting events happening soon." cta="View Events" onClick={() => router.push("/events")} />
             <QuickCard I={Trophy} c="#8B5CF6" title="Challenges" blurb="Take on fun challenges and earn rewards." cta="Explore Challenges" onClick={() => filterTo("challenge")} />
-            <QuickCard I={Lightbulb} c="#FFC629" title="Submit Idea" blurb="Share your ideas and get community support." cta="Share Idea" onClick={openIdea} />
+            <QuickCard I={Lightbulb} c="#FFC629" title="Submit Idea" blurb="Share your ideas and get community support." cta="Share Idea" onClick={() => useIdeasUI.getState().setShare(true)} />
             <QuickCard I={Users} c="#1FD18B" title="Join Teams" blurb="Collaborate with like-minded people and build together." cta="Find Teams" onClick={findTeams} />
           </ul>
 
@@ -126,7 +119,7 @@ export default function ActionCenter() {
                 <p className="text-[15px] font-semibold">{q.trim() ? `Nothing matches “${q.trim()}”` : "Nothing here yet"}</p>
                 <button onClick={clear} className="btn-blue px-4 py-2 text-[13px]">Show everything</button></div>
             ) : (
-              <ul className="mt-3 grid grid-cols-1 gap-3 @lg:grid-cols-2 @4xl:grid-cols-4"><AnimatePresence initial={false} mode="popLayout">{shown.map((o, k) => <OppCard key={o.id} o={o} joined={joined} now={now} act={act} openIdea={openIdea} index={k} />)}</AnimatePresence></ul>)}
+              <ul className="mt-3 grid grid-cols-1 gap-3 @lg:grid-cols-2 @4xl:grid-cols-4"><AnimatePresence initial={false} mode="popLayout">{shown.map((o, k) => <OppCard key={o.id} o={o} joined={joined} now={now} index={k} />)}</AnimatePresence></ul>)}
           </section>
 
           <section aria-labelledby="community-banner" className="relative isolate flex items-center gap-4 overflow-hidden rounded-2xl border border-primary/50 px-4 py-3 text-white md:pl-[250px]"
@@ -143,6 +136,7 @@ export default function ActionCenter() {
       </div>
       {!wide && <div className="grid items-start gap-3 md:grid-cols-2"><div className="space-y-3"><ProgressPanel /><PromoCard onClick={() => filterTo("challenge")} /></div><ActivityPanel /></div>}
       <ProgressDialog /><FeedDialog />
+      <ActionDock />
     </div>
   );
 }

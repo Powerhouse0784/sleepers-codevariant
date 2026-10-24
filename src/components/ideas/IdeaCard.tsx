@@ -1,8 +1,8 @@
 "use client";
 import { motion } from "motion/react";
 import { ThumbsUp, MessageSquare, ArrowRight, Flame, TrendingUp, Pencil, Hammer } from "lucide-react";
-import { useIdeas, useIdeasUI } from "@/lib/ideasStore";
-import { useStore } from "@/lib/store";
+import { useIdeasUI } from "@/lib/ideasStore";
+import { useSettings } from "@/lib/settingsStore";
 import { authorName, badgeOf, commentCount, likeCount, when, type Idea } from "@/features/ideas/ideas";
 import IdeaCover, { Avatar, CategoryPill } from "./IdeaCover";
 
@@ -14,7 +14,7 @@ export function StatusBadge({ idea, all, className = "" }: { idea: Idea; all: Id
 }
 
 export default function IdeaCard({ idea, all, now, index }: { idea: Idea; all: Idea[]; now: number; index: number }) {
-  const toggleLike = useIdeas((s) => s.toggleLike); const open = useIdeasUI((s) => s.open); const userName = useStore((s) => s.userName);
+  const open = useIdeasUI((s) => s.open); const userName = useSettings((s) => s.profile.name);
   const name = authorName(idea.authorId, userName); const likes = likeCount(idea);
   return (
     <motion.article layout initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ delay: Math.min(index, 6) * 0.05 }}
@@ -30,8 +30,7 @@ export default function IdeaCard({ idea, all, now, index }: { idea: Idea; all: I
         <div className="mt-auto flex items-center gap-2 pt-3.5">
           <Avatar id={idea.authorId} name={name} size={30} />
           <p className="min-w-0 flex-1 leading-tight"><span className="block truncate text-[12px] font-medium">{name}</span><span className="block text-[10.5px] text-mute">{when(idea.createdAt, now)}</span></p>
-          <button onClick={() => toggleLike(idea.id)} aria-pressed={idea.likedByMe} aria-label={`${idea.likedByMe ? "Unlike" : "Like"} ${idea.title}, ${likes} likes`}
-            className={`relative z-10 inline-flex items-center gap-1 rounded-lg px-1.5 py-1 text-[11.5px] font-medium transition hover:bg-white/10 ${idea.likedByMe ? "text-honey" : "text-mute"}`}><ThumbsUp size={13} fill={idea.likedByMe ? "currentColor" : "none"} aria-hidden />{likes}</button>
+          <span className={`inline-flex items-center gap-1 px-1.5 text-[11.5px] font-medium ${idea.likedByMe ? "text-honey" : "text-mute"}`} aria-label={`${likes} likes${idea.likedByMe ? ", including yours" : ""}`}><ThumbsUp size={13} fill={idea.likedByMe ? "currentColor" : "none"} aria-hidden />{likes}</span>
           <span className="inline-flex items-center gap-1 px-1 text-[11.5px] text-mute" aria-label={`${commentCount(idea)} comments`}><MessageSquare size={13} aria-hidden />{commentCount(idea)}</span>
           <button onClick={() => open(idea.id)} aria-label={`Open ${idea.title}`} className="relative z-10 grid h-8 w-8 shrink-0 place-items-center rounded-full border border-primary/40 bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-white"><ArrowRight size={14} aria-hidden /></button>
         </div>

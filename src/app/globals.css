@@ -86,3 +86,83 @@ input[type=range] { accent-color: var(--gold); }
 .poster { background: #fff; padding: 4px 4px 14px; border-radius: 3px; box-shadow: var(--poster-shadow); }
 @keyframes drift { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
 .drift { animation: drift 5s ease-in-out infinite; }
+
+/* ---- Knowledge Base ---- */
+:root, [data-theme="dark"] {
+  --kb-hero: linear-gradient(180deg,#0a0f3d 0%,#1b1470 38%,#3b1a86 66%,#8a2f86 100%);
+  --kb-mtn1:#2a1b6e; --kb-mtn2:#120c3d; --kb-city:#3a2285;
+}
+[data-theme="light"] {
+  --kb-hero: linear-gradient(180deg,#8fc3ff 0%,#c4dcff 48%,#ffe3cc 100%);
+  --kb-mtn1:#8ea8e0; --kb-mtn2:#6f8cc9; --kb-city:#7d94cf;
+}
+.hero-kb { background: var(--kb-hero); border-radius: 20px; position: relative; overflow: hidden; min-height: 280px; border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent); }
+.honeycomb-bg { background-image: url(/decor/honeycomb.svg); background-repeat: no-repeat; background-size: contain; }
+
+/* ---- Motion layer (Fx.tsx, template.tsx) ---- */
+:root { --ease-out: cubic-bezier(.22,1,.36,1); }
+.nav-item[aria-current="page"] { box-shadow: none; }
+.nav-item svg { transition: translate .25s var(--ease-out), scale .25s var(--ease-out); }
+.nav-item:hover svg { translate: 2px 0; scale: 1.08; }
+
+/* Backdrop: three slow blobs plus a light that trails the cursor */
+.fx-blob { position: absolute; border-radius: 50%; will-change: transform; opacity: .5; }
+.fx-b1 { width: 52vmax; height: 52vmax; left: -14vmax; top: -18vmax; background: radial-gradient(circle, color-mix(in srgb, var(--primary) 22%, transparent), transparent 65%); animation: fx-a 34s ease-in-out infinite alternate; }
+.fx-b2 { width: 44vmax; height: 44vmax; right: -12vmax; top: 22vh; background: radial-gradient(circle, color-mix(in srgb, #8b3dff 20%, transparent), transparent 65%); animation: fx-b 41s ease-in-out infinite alternate; }
+.fx-b3 { width: 40vmax; height: 40vmax; left: 28vw; bottom: -22vmax; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 15%, transparent), transparent 65%); animation: fx-c 37s ease-in-out infinite alternate; }
+.fx-cursor { position: absolute; inset: 0; opacity: 0; transition: opacity .6s; background: radial-gradient(520px circle at var(--cx, 50%) var(--cy, 30%), color-mix(in srgb, var(--gold) 9%, transparent), transparent 70%); }
+.fx-on .fx-cursor { opacity: 1; }
+[data-theme="light"] .fx-blob { opacity: .35; }
+@keyframes fx-a { to { translate: 14vmax 10vmax; scale: 1.15; } }
+@keyframes fx-b { to { translate: -12vmax -8vmax; scale: 1.2; } }
+@keyframes fx-c { to { translate: -10vmax -6vmax; scale: .9; } }
+
+/* Cards rise in as they appear (time based), and again as they scroll into view where the browser supports it */
+@keyframes fx-in { from { opacity: 0; translate: 0 18px; scale: .985; } }
+@keyframes fx-scroll { from { opacity: 0; translate: 0 38px; scale: .97; } to { opacity: 1; translate: 0 0; scale: 1; } }
+.card { animation: fx-in .6s var(--ease-out) backwards; transition: border-color .25s, box-shadow .25s, translate .3s var(--ease-out), background-color .25s; }
+.card:nth-child(2) { animation-delay: .05s } .card:nth-child(3) { animation-delay: .1s } .card:nth-child(4) { animation-delay: .15s }
+.card:nth-child(5) { animation-delay: .2s } .card:nth-child(6) { animation-delay: .25s } .card:nth-child(n+7) { animation-delay: .3s }
+@supports (animation-timeline: view()) {
+  .card { animation: fx-in .6s var(--ease-out) backwards, fx-scroll linear backwards; animation-timeline: auto, view(); animation-range: normal, entry 0% entry min(42%, 140px); }
+}
+/* Spotlight that follows the pointer inside a card; interactive cards also lift */
+.fx-on .card:hover:not([style*="background"]) { background-image: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--gold) 10%, transparent), transparent 62%); border-color: color-mix(in srgb, var(--gold) 38%, var(--line)); }
+.fx-on :is(a, button, article, li, [role="button"]).card:hover { translate: 0 -3px; box-shadow: 0 18px 38px -18px color-mix(in srgb, var(--gold) 45%, transparent), var(--card-shadow); }
+.fx-on :is(.hero, .hero-ev, .hero-kb)::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; background: radial-gradient(420px circle at var(--mx, 70%) var(--my, 20%), rgba(255,255,255,.28), transparent 60%); opacity: 0; transition: opacity .4s; }
+.fx-on :is(.hero, .hero-ev, .hero-kb):hover::after { opacity: 1; }
+
+/* Buttons: shine sweep, magnetic pull, press */
+.btn-gold { background-image: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.6) 50%, transparent 62%), linear-gradient(180deg,#FFD23F,#FFC400); background-size: 260% 100%, 100% 100%; background-position: 160% 0, 0 0; background-repeat: no-repeat; transition: background-position .7s var(--ease-out), box-shadow .25s, scale .2s, translate .2s; translate: var(--bx, 0) var(--by, 0); }
+.btn-gold:hover { background-position: -60% 0, 0 0; box-shadow: 0 10px 26px -6px rgba(255,196,0,.7); }
+.btn-gold:active, .btn-blue:active, .btn-ghost:active, .pill:active { scale: .96; }
+.btn-blue, .btn-ghost, .pill { transition: background .2s, color .2s, border-color .2s, scale .2s; }
+
+/* Headline shine and breathing accents */
+@keyframes fx-shine { to { background-position: 200% 0; } }
+.ev-gold { background: linear-gradient(100deg, var(--ev-gold) 30%, #fff6c8 48%, var(--ev-gold) 66%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: fx-shine 5.5s linear infinite; }
+@keyframes fx-pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 55%, transparent); } 70% { box-shadow: 0 0 0 9px transparent; } }
+.fx-on .bg-honey.rounded-full.ring-2 { animation: fx-pulse 2.4s infinite; }
+.fx-on .scroll-thin { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
+.calm .fx-blob, .calm .fx-cursor { display: none; }
+.calm .card, .calm .ev-gold { animation: none !important; }
+/* Form fields and the sticky top bar keep their stacking order, so icons drawn over them stay visible */
+:is(input, textarea, select).card, header .card { animation: none !important; }
+
+/* Canvas Protocol: draggable cards and Action Zones */
+.zone { --z: var(--gold); background: color-mix(in srgb, var(--surface) 80%, transparent); border-color: color-mix(in srgb, var(--z) 28%, var(--line)); border-style: dashed; transition: transform .22s var(--ease-out), background .2s, border-color .2s, box-shadow .2s, opacity .2s; }
+.zone-icon { background: color-mix(in srgb, var(--z) 18%, transparent); color: var(--z); transition: background .2s, color .2s, transform .2s; }
+.zone[data-state="armed"] { border-style: solid; border-color: var(--z); animation: zone-pulse 1.3s ease-in-out infinite; }
+.zone[data-state="hot"] { border-style: solid; border-color: var(--z); transform: translateY(-5px) scale(1.07); background: color-mix(in srgb, var(--z) 22%, var(--surface)); box-shadow: 0 14px 34px -10px var(--z); animation: none; }
+.zone[data-state="hot"] .zone-icon { background: var(--z); color: #14100a; transform: scale(1.12) rotate(-6deg); }
+.zone[data-state="reject"] { border-style: solid; border-color: #ff6b81; background: color-mix(in srgb, #ff6b81 12%, var(--surface)); animation: zone-shake .32s; }
+.zone[data-state="dim"] { opacity: .32; }
+.zone-burst { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: radial-gradient(circle, var(--z), transparent 70%); animation: zone-burst .6s ease-out forwards; pointer-events: none; }
+.zone-burst-bad { background: radial-gradient(circle, #ff6b81, transparent 70%); }
+@keyframes zone-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--z) 50%, transparent); } 50% { box-shadow: 0 0 0 7px transparent; } }
+@keyframes zone-burst { from { opacity: .9; transform: scale(.5); } to { opacity: 0; transform: scale(1.7); } }
+@keyframes zone-shake { 25% { translate: -4px 0; } 50% { translate: 4px 0; } 75% { translate: -3px 0; } }
+body.canvas-dragging, body.canvas-dragging * { cursor: grabbing !important; user-select: none !important; -webkit-user-select: none !important; }
+.calm .zone, .calm .zone * { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .zone, .zone * { animation: none !important; } }

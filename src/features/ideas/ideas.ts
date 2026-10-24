@@ -23,7 +23,8 @@ export const AVATAR_TINT: Record<string, [string, string]> = { me: ["#FFD23F", "
 export const SUPPORT_AT = 25;
 export const likeCount = (i: Idea) => i.likes + (i.likedByMe ? 1 : 0);
 export const commentCount = (i: Idea) => i.baseComments + i.comments.length;
-export const authorName = (id: string, userName?: string) => (id === ME && userName ? `${userName} Nadeem` : AUTHORS[id] ?? "Someone");
+/** `myName` is your full name from Settings, so renaming yourself there renames you everywhere. */
+export const authorName = (id: string, myName?: string) => (id === ME && myName ? myName : AUTHORS[id] ?? "Someone");
 
 export const feedOf = (all: Idea[]) => all.filter((i) => i.shared);
 export const ranked = (all: Idea[]) => [...feedOf(all)].sort((a, b) => likeCount(b) - likeCount(a) || Date.parse(b.createdAt) - Date.parse(a.createdAt));
@@ -41,9 +42,9 @@ export function inScope(i: Idea, scope: Scope) {
   if (i.authorId !== ME) return false;
   return scope === "mine" ? true : scope === "shared" ? i.shared : scope === "progress" ? i.stage === "progress" : i.shared && likeCount(i) >= SUPPORT_AT;
 }
-export function matches(i: Idea, q: string, userName?: string) {
+export function matches(i: Idea, q: string, myName?: string) {
   const t = q.trim().toLowerCase(); if (!t) return true;
-  return `${i.title} ${i.summary} ${CATEGORY_LABEL[i.category]} ${authorName(i.authorId, userName)}`.toLowerCase().includes(t);
+  return `${i.title} ${i.summary} ${CATEGORY_LABEL[i.category]} ${authorName(i.authorId, myName)}`.toLowerCase().includes(t);
 }
 export function when(iso: string, nowMs: number) {
   const d = Math.floor(Math.max(0, nowMs - Date.parse(iso)) / 864e5);

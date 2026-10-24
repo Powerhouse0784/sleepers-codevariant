@@ -47,3 +47,33 @@ Momentum rules: src/features/momentum/momentum.ts. Hive stats: src/features/hive
 - `src/lib/calendarStore.ts`: screen state only (view, date cursor, search, open dialogs). Opens on today, and follows the Time travel slider.
 - Behaviour: tap a day for its Day view, "+N more" for overflow, any entry for details. Events open the event drawer, due dates open the item, joined items open the Action Center, and sample entries offer "Add to my events". Quick Actions: Add Event opens the Create event dialog, Join Challenge opens the Action Center on challenges, Create Idea opens Share Idea. Top bar search filters the grid. On phones the month grid shows coloured dots and the Day view carries the detail.
 - `public/calendar/*.webp` are crops of the supplied mockup (hero bee scene, promo bee, city strip, Today bee). Text and buttons are rebuilt as live components.
+
+
+## Motion layer
+One shared layer (`src/components/Fx.tsx`, `src/app/template.tsx` and the "Motion layer" block in `globals.css`) gives every screen the same feel:
+- Page transitions on every route change, a scroll progress bar and a slow aurora backdrop with a light that trails the cursor.
+- Cards rise in as they appear and again as they scroll into view, then follow the pointer with a soft spotlight and lift on hover.
+- Hero banners catch the light under the pointer; gold buttons shine and are pulled slightly toward the cursor; the sidebar indicator slides between screens.
+- Counters, headline shine and the notification pulse are included.
+All of it is skipped on touch devices, with `prefers-reduced-motion`, and in Calm mode.
+
+## Settings screen (`/settings`)
+- `src/components/settings/*`: `Settings` (page: hero, section nav, Account view with Profile Information, Social Links, Notification Preferences and Quick Settings, plus the shared progress / community / promo rail and join banner), `SettingsPanels` (Notifications, Privacy, Appearance, App Preferences, Security, Connected Accounts, Help & Support), `SettingsDialogs` (edit profile, edit link, default view, language, delete everything) and `util.ts` (export, storage stats, wipe).
+- `src/features/settings/settings.ts`: link cleaning (GitHub, LinkedIn, X and portfolio accept a handle or a URL and reject anything unsafe), the device time zone label, settings search, and the bell's notification list. `npm run test:settings`.
+- `src/lib/settingsStore.ts`: its own persisted store (`ebb:settings:v1`: profile, links, notification switches, reminder lead time, default view). Everything is cleaned again on load. Screen state is separate and not saved.
+- What each control really does: Edit Profile changes the sidebar name and headline, the greeting name, and your People entry if you joined. Notification switches and the reminder lead time decide what the bell lists (events starting soon or live, challenges you joined, latest community activity, platform news). Theme and Calm mode are the same switches as the top bar. Default View opens that screen once per browser session when the app is launched on the home screen. Privacy can remove you from or send you to join the People directory, export all saved data as JSON, or wipe everything and restart. Replay the tour restarts it on the hive. The top bar search on this screen jumps to the matching section.
+- Honest limits: there are no accounts or servers, so Security shows what is stored on the device instead of 2FA. Language has only English (US). Time zone follows the device. Mentorship alerts are saved but nothing sends them yet. Social links start empty so nobody gets linked to an account that is not theirs.
+- `public/settings/hero-bee.webp` is cropped from the supplied mockup; text, toggles and buttons are rebuilt as live components.
+
+## Review fixes
+- Ideas and People now read your full name from Settings (`profile.name`), so renaming yourself there renames you in the Ideas feed, comments and the People directory. Before, they appended a fixed surname to the first name.
+- The command palette's "Reset sample data" now also resets the Action Center, like the top-bar reset does.
+- Phones: the bottom bar's last slot is now **More**, a sheet listing Momentum Hive, People, Action Center, Calendar, Knowledge Base and Settings. Below 1024px the sidebar is hidden, so these screens had no way in.
+
+## Canvas Protocol (mid-hackathon challenge)
+Primary actions (submit, save, delete, like, move, post) are done only by dragging a data card onto an Action Zone. No standard buttons execute them. Done screen by screen, on one shared engine:
+- `src/lib/canvas.ts` (store, zone registry, `commitDrag`), `src/components/canvas/Draggable.tsx` (any card becomes draggable), `ActionZone.tsx` (drop targets that light up, grow, or explain a refusal) and `DragLayer.tsx` (the floating card, keyboard dragging and screen-reader announcements). Mounted once in the Shell.
+- Mouse and pen: drag. Touch: press and hold, then drag (scrolling still works). Keyboard: focus a card, Space or Enter to lift, arrow keys or Tab to pick a zone, Enter to drop, Esc to cancel.
+- Each screen declares its zones and the rules for what each accepts. The rules are plain functions with tests (`src/features/<screen>/canvas.ts`).
+- **Ideas (done):** zones Support, Discuss, Just an idea, In progress, Done, Publish, Save draft, Bin and Post comment. A new idea is a note you write on and drag onto Publish or Save draft; a comment is a note you drag onto Post. "Start an idea" from any screen takes you to the note.
+- Still to convert: Hive, Events, People, Action Center, Calendar, Settings, Knowledge Base, Daily Buzz.

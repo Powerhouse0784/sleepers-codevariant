@@ -3,22 +3,23 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { usePeople, usePeopleUI } from "@/lib/peopleStore";
-import { useStore, useUI } from "@/lib/store";
+import { useUI } from "@/lib/store";
+import { useSettings } from "@/lib/settingsStore";
 import { FAMILIES, GROUPS, GROUP_LABEL, type Family, type Group } from "@/features/people/people";
 
 /** "Join Now" and "Edit profile": your own card in the directory. */
 export default function ProfileDialog() {
   const open = usePeopleUI((s) => s.profileOpen), setOpen = usePeopleUI((s) => s.setProfile);
-  const { people, saveMe, leave } = usePeople(); const userName = useStore((s) => s.userName); const toast = useUI((s) => s.toast), celebrate = useUI((s) => s.celebrate);
+  const { people, saveMe, leave } = usePeople(); const myName = useSettings((s) => s.profile.name), headline = useSettings((s) => s.profile.headline); const toast = useUI((s) => s.toast), celebrate = useUI((s) => s.celebrate);
   const me = people.find((p) => p.isMe);
   const [role, setRole] = useState(""); const [family, setFamily] = useState<Family>("Developer"); const [city, setCity] = useState(""); const [bio, setBio] = useState(""); const [skills, setSkills] = useState(""); const [groups, setGroups] = useState<Group[]>(["students"]); const [err, setErr] = useState(""); const [sure, setSure] = useState(false);
-  useEffect(() => { if (!open) return; setErr(""); setSure(false); setRole(me?.role ?? "Student · Innovator"); setFamily(me?.family ?? "Developer"); setCity(me?.city ?? ""); setBio(me?.bio ?? ""); setSkills(me?.skills.join(", ") ?? ""); setGroups(me?.groups ?? ["students"]); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!open) return; setErr(""); setSure(false); setRole(me?.role ?? (headline || "Student · Innovator")); setFamily(me?.family ?? "Developer"); setCity(me?.city ?? ""); setBio(me?.bio ?? ""); setSkills(me?.skills.join(", ") ?? ""); setGroups(me?.groups ?? ["students"]); }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
   const close = () => setOpen(false);
   const toggle = (g: Group) => setGroups((x) => (x.includes(g) ? x.filter((y) => y !== g) : [...x, g]));
   const save = () => {
     if (!role.trim()) return setErr("Tell people what you do.");
     if (!bio.trim()) return setErr("Add a line about yourself.");
-    saveMe(`${userName} Nadeem`, { role: role.trim(), family, city: city.trim() || "India", bio: bio.trim(), skills: skills.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 8), groups });
+    saveMe(myName, { role: role.trim(), family, city: city.trim() || "India", bio: bio.trim(), skills: skills.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 8), groups });
     close(); if (!me) { celebrate(); toast("Welcome to the community!"); } else toast("Profile updated.");
   };
   const field = "field mt-1.5 w-full px-3 py-2.5 text-sm";

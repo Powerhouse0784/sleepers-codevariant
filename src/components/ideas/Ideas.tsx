@@ -3,21 +3,27 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { LayoutGrid, ChevronDown, SearchX, RotateCcw, type LucideIcon } from "lucide-react";
 import { useIdeas, useIdeasUI } from "@/lib/ideasStore";
-import { useStore } from "@/lib/store";
+import { useSettings } from "@/lib/settingsStore";
 import { useNow, useMedia } from "@/lib/hooks";
 import { CATEGORIES, CATEGORY_LABEL, SCOPE_LABEL, inScope, matches, type Category } from "@/features/ideas/ideas";
 import IdeasHero from "./IdeasHero";
 import IdeaCard from "./IdeaCard";
 import { CATEGORY_ICON } from "./IdeaCover";
 import { TopIdeas, IdeaStats, Promo, TopIdeasDialog } from "./Rail";
+import Draggable from "../canvas/Draggable";
+import Composer from "./Composer";
+import { IdeaDock, ideaCard } from "./IdeaZones";
+import { CATEGORY_LABEL as CL } from "@/features/ideas/ideas";
 
 const PAGE = 6;
 
 export default function Ideas() {
-  const ideas = useIdeas((s) => s.ideas); const userName = useStore((s) => s.userName);
-  const { q, category, scope, setCategory, setScope, clearFilters, setShare } = useIdeasUI();
+  const ideas = useIdeas((s) => s.ideas); const userName = useSettings((s) => s.profile.name);
+  const { q, category, scope, setCategory, clearFilters, setShare, shareOpen } = useIdeasUI();
   const now = useNow(); const wide = useMedia("(min-width: 1280px)"); const [limit, setLimit] = useState(PAGE); const filters = useRef<HTMLDivElement>(null);
   useEffect(() => setLimit(PAGE), [q, category, scope]);
+  // "Start an idea" from anywhere lands here: bring the note into view and put the cursor in its title
+  useEffect(() => { if (!shareOpen) return; const el = document.getElementById("idea-composer-title"); el?.scrollIntoView({ behavior: "smooth", block: "center" }); window.setTimeout(() => el?.focus({ preventScroll: true }), 350); setShare(false); }, [shareOpen, setShare]);
 
   const shown = useMemo(() => ideas.filter((i) => inScope(i, scope) && (category === "all" || i.category === category) && matches(i, q, userName)).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)), [ideas, scope, category, q, userName]);
   const visible = shown.slice(0, limit); const anyFilter = q.trim() || category !== "all" || scope !== "all";
@@ -27,7 +33,7 @@ export default function Ideas() {
   const rail = <><TopIdeas all={ideas} /><IdeaStats all={ideas} /><Promo onShare={() => setShare(true)} /></>;
   return (
     <div className="mx-auto max-w-[1320px] space-y-4 pb-4">
-      <IdeasHero onShare={() => setShare(true)} onExplore={explore} />
+      <IdeasHero onExplore={explore} />
       <div className={wide ? "grid grid-cols-[1fr_300px] items-start gap-4" : ""}>
         <div className="min-w-0">
           <div ref={filters} className="-mx-1 flex scroll-mt-20 gap-2 overflow-x-auto px-1 py-1 scroll-thin" role="group" aria-label="Filter by category">
@@ -39,21 +45,22 @@ export default function Ideas() {
               {q.trim() && <span>Matching &ldquo;{q.trim()}&rdquo;</span>}
               <button onClick={clearFilters} className="inline-flex items-center gap-1 underline-offset-2 hover:text-[var(--text)] hover:underline"><RotateCcw size={12} aria-hidden /> Clear</button></p>)}
           <p className="sr-only" role="status">{shown.length} ideas shown</p>
-          {shown.length === 0 ? (
-            <div className="card mt-3 grid place-items-center gap-3 px-6 py-14 text-center"><SearchX size={30} className="text-mute" aria-hidden />
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <li className="min-w-0"><Composer /></li>
+            <AnimatePresence initial={false}>{visible.map((i, k) => <li key={i.id} className="min-w-0"><Draggable label={i.title} payload={() => ideaCard(i.id, i.title, CL[i.category])} className="h-full"><IdeaCard idea={i} all={ideas} now={now} index={k} /></Draggable></li>)}</AnimatePresence>
+          </ul>
+          {shown.length === 0 && (
+            <div className="card mt-3 grid place-items-center gap-3 px-6 py-10 text-center"><SearchX size={30} className="text-mute" aria-hidden />
               <p className="text-[15px] font-semibold">{q.trim() ? `Nothing matches “${q.trim()}”` : "No ideas here yet"}</p>
-              <p className="max-w-xs text-[13px] text-mute">{anyFilter ? "Try another category or clear the filters." : "Be the first to share one."}</p>
-              <div className="flex gap-2">{anyFilter && <button onClick={clearFilters} className="btn-blue px-4 py-2 text-[13px]">Clear filters</button>}<button onClick={() => setShare(true)} className="btn-gold px-4 py-2 text-[13px]">Share an idea</button></div></div>
-          ) : (
-            <ul className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              <AnimatePresence initial={false}>{visible.map((i, k) => <li key={i.id} className="min-w-0"><IdeaCard idea={i} all={ideas} now={now} index={k} /></li>)}</AnimatePresence>
-            </ul>)}
+              <p className="max-w-xs text-[13px] text-mute">{anyFilter ? "Try another category or clear the filters, or write the first one on the note above." : "Write one on the note above and drag it onto Publish."}</p>
+              {anyFilter && <button onClick={clearFilters} className="btn-blue px-4 py-2 text-[13px]">Clear filters</button>}</div>)}
           {shown.length > limit && <button onClick={() => setLimit(limit + PAGE)} className="btn-blue mx-auto mt-4 flex items-center gap-2 px-5 py-2.5 text-[13px]">Show {Math.min(PAGE, shown.length - limit)} more <ChevronDown size={14} aria-hidden /></button>}
         </div>
         {wide && <aside className="sticky top-20 space-y-3" aria-label="Top ideas and your stats">{rail}</aside>}
       </div>
       {!wide && <div className="grid items-start gap-3 md:grid-cols-2"><div className="space-y-3">{<TopIdeas all={ideas} />}<IdeaStats all={ideas} /></div><Promo onShare={() => setShare(true)} /></div>}
       <TopIdeasDialog all={ideas} />
+      <IdeaDock />
     </div>
   );
 }

@@ -10,7 +10,8 @@
     "test:ideas": "node --experimental-strip-types src/features/ideas/ideas.test.ts",
     "test:people": "node --experimental-strip-types src/features/people/people.test.ts",
     "test:actions": "node --experimental-strip-types src/features/actions/actions.test.ts",
-    "test:calendar": "node --experimental-strip-types src/features/calendar/calendar.test.ts"
+    "test:calendar": "node --experimental-strip-types src/features/calendar/calendar.test.ts",
+    "test:settings": "node --experimental-strip-types src/features/settings/settings.test.ts"
   },
   "dependencies": {
     "next": "^15.5.0",

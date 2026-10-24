@@ -6,6 +6,7 @@ import { Search, Lightbulb, UserRound, CheckSquare, FileText, ArrowRight, Moon, 
 import { useStore, useUI } from "@/lib/store";
 import { useIdeas, useIdeasUI } from "@/lib/ideasStore";
 import { usePeople, usePeopleUI } from "@/lib/peopleStore";
+import { useActions } from "@/lib/actionsStore";
 
 type Cmd = { id: string; label: string; hint?: string; Icon: LucideIcon; run: () => void };
 const PAGES: [string, string][] = [["Daily Buzz", "/"], ["Momentum Hive", "/hive"], ["Events", "/events"], ["Ideas", "/ideas"], ["People", "/people"], ["Action Center", "/actions"], ["Calendar", "/calendar"], ["Knowledge Base", "/knowledge"], ["Settings", "/settings"]];
@@ -25,7 +26,7 @@ export default function CommandPalette() {
 
   const cmds = useMemo<Cmd[]>(() => [
     { id: "ci", label: "Capture an idea", Icon: Lightbulb, run: () => setCapture(true, "idea") },
-    { id: "si", label: "Share an idea with the community", hint: "Ideas", Icon: Lightbulb, run: () => { router.push("/ideas"); useIdeasUI.getState().setShare(true); } },
+    { id: "si", label: "Start a new idea note", hint: "Ideas", Icon: Lightbulb, run: () => { router.push("/ideas"); useIdeasUI.getState().setShare(true); } },
     { id: "jc", label: "Join or edit your community profile", hint: "People", Icon: UserRound, run: () => { router.push("/people"); usePeopleUI.getState().setProfile(true); } },
     { id: "cp", label: "Save a contact", Icon: UserRound, run: () => setCapture(true, "person") },
     { id: "ca", label: "Add an action item", Icon: CheckSquare, run: () => setCapture(true, "action") },
@@ -35,7 +36,7 @@ export default function CommandPalette() {
     { id: "ff", label: "Fast-forward 7 days", hint: "Time travel", Icon: FastForward, run: () => { setOffset(Math.min(45, offsetDays + 7)); toast("Fast-forwarded. Watch the hive cool."); } },
     { id: "bt", label: "Back to today", hint: "Time travel", Icon: FastForward, run: () => setOffset(0) },
     { id: "cm", label: calm ? "Turn calm mode off" : "Turn calm mode on", hint: "Less motion", Icon: Leaf, run: () => setCalm(!calm) },
-    { id: "rs", label: "Reset sample data", Icon: RotateCcw, run: () => { resetDemo(); useIdeas.getState().reset(); usePeople.getState().reset(); setOffset(0); toast("Sample data refreshed."); } },
+    { id: "rs", label: "Reset sample data", Icon: RotateCcw, run: () => { resetDemo(); useIdeas.getState().reset(); usePeople.getState().reset(); useActions.getState().reset(); setOffset(0); toast("Sample data refreshed."); } },
   ], [theme, calm, offsetDays, router, setCapture, setTheme, setCalm, setOffset, resetDemo, toast]);
 
   const items = useMemo<Cmd[]>(() => {

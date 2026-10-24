@@ -56,7 +56,7 @@ export function ProgressPanel() {
 const FEED_ICON: Record<FeedKind, { I: LucideIcon; c: string }> = {
   challenge: { I: Trophy, c: "#8B5CF6" }, idea: { I: Lightbulb, c: "#A855F7" }, team: { I: Users, c: "#FFC629" }, done: { I: CheckCircle2, c: "#2F8BFF" }, event: { I: CalendarDays, c: "#2F8BFF" },
 };
-function FeedAvatar({ f, size = 40 }: { f: Feed; size?: number }) {
+export function FeedAvatar({ f, size = 40 }: { f: Feed; size?: number }) {
   const ring = f.mine ? "#FFC629" : ringOf(f.who);
   return <span aria-hidden className="grid shrink-0 place-items-center overflow-hidden rounded-full" style={{ width: size, height: size, boxShadow: `0 0 0 2px ${ring}, 0 0 12px ${ring}55`, background: "linear-gradient(135deg,#FFD23F,#ff9a3c)" }}>
     {f.avatar ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={f.avatar} alt="" width={size} height={size} className="h-full w-full object-cover" draggable={false} /> : <span className="font-bold text-[#1a1304]">{f.who.slice(0, 1)}</span>}</span>;

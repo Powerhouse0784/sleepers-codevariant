@@ -1,5 +1,5 @@
 "use client";
-import { Lightbulb, Plus, Sparkle } from "lucide-react";
+import { Lightbulb, MousePointer2, Sparkle } from "lucide-react";
 
 /** Night city on the left, drawn in code so the real heading and buttons can sit on it. The bee scene on the right is the supplied artwork. */
 export function City() {
@@ -16,7 +16,7 @@ export function City() {
   );
 }
 
-export default function IdeasHero({ onShare, onExplore }: { onShare: () => void; onExplore: () => void }) {
+export default function IdeasHero({ onExplore }: { onExplore: () => void }) {
   return (
     <section aria-labelledby="ideas-hero" className="relative isolate min-h-[250px] overflow-hidden rounded-[20px] border border-[#2a4fb8]/50 text-white"
       style={{ background: "radial-gradient(520px 240px at 48% 108%, rgba(255,140,90,.5), transparent 70%), radial-gradient(420px 260px at 14% -10%, rgba(130,80,255,.55), transparent 70%), linear-gradient(100deg,#0b1245 0%,#241a7a 48%,#3d2a8f 100%)" }}>
@@ -31,8 +31,8 @@ export default function IdeasHero({ onShare, onExplore }: { onShare: () => void;
         </h1>
         <p className="mt-3 max-w-[380px] text-[13px] leading-relaxed text-white/90 sm:text-[15px]">Share your ideas, explore others, and turn small thoughts into big impact!</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <button onClick={onShare} className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 text-[13px] sm:text-sm"><Plus size={16} aria-hidden /> Share New Idea</button>
           <button onClick={onExplore} className="btn-ghost inline-flex items-center px-5 py-2.5 text-[13px] sm:text-sm" style={{ color: "#fff", borderColor: "rgba(255,255,255,.35)" }}>Explore Ideas</button>
+          <p className="inline-flex max-w-[260px] items-center gap-2 rounded-xl border border-white/25 bg-white/10 px-3 py-2 text-[11.5px] leading-snug backdrop-blur"><MousePointer2 size={15} className="shrink-0 text-[#FFC629]" aria-hidden />Drag idea cards onto the Action Zones to support, build or share them.</p>
         </div>
       </div>
     </section>

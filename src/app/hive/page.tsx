@@ -20,6 +20,7 @@ import ListView from "@/components/hive/ListView";
 import ReviewMode from "@/components/hive/ReviewMode";
 import ShortcutsDialog from "@/components/hive/ShortcutsDialog";
 import TopEvents, { type EventRow } from "@/components/hive/TopEvents";
+import { HiveDock } from "@/components/hive/HiveZones";
 
 const DAY = 864e5;
 const TYPES: { k: Kind | "all"; l: string }[] = [{ k: "all", l: "All" }, { k: "idea", l: "Ideas" }, { k: "person", l: "People" }, { k: "action", l: "Actions" }];
@@ -140,7 +141,7 @@ export default function HivePage() {
             <div className="mt-2 min-h-[300px]">
               {view === "overview" && <><HexOverview counts={counts} selected={state} hovered={hover} onPick={pick} onHover={setHover} onTotal={onTotal} />
                 <DistBar counts={counts} selected={state} onPick={pick} /><Peek state={hover ?? state} cells={base} now={now} onOpen={select} /><ColdShelf cells={base} now={now} onOpen={select} /></>}
-              {view === "cells" && (shown.length ? <><Hive cells={shown} nowMs={now} selectedId={selectedId} onSelect={select} />
+              {view === "cells" && (shown.length ? <><Hive cells={shown} nowMs={now} selectedId={selectedId} />
                 <ul className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-mute" aria-label="Legend">{STATES.map((s) => <li key={s} className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: STATE_COLOR[s] }} aria-hidden />{STATE_LABEL[s]}, {STATE_RANGE[s]}</li>)}</ul></>
                 : <p className="py-24 text-center text-sm text-mute">Nothing matches these filters.</p>)}
               {view === "list" && (shown.length ? <ListView cells={shown} now={now} /> : <p className="py-24 text-center text-sm text-mute">Nothing matches these filters.</p>)}
@@ -160,6 +161,7 @@ export default function HivePage() {
 
       <AnimatePresence>{review && <ReviewMode queue={queue} now={now} onClose={() => setReview(false)} />}</AnimatePresence>
       <AnimatePresence>{help && <ShortcutsDialog onClose={() => setHelp(false)} onTour={() => setTourDone(false)} />}</AnimatePresence>
+      <HiveDock />
     </div>
   );
 }

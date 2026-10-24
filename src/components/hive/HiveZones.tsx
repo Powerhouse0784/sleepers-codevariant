@@ -35,7 +35,7 @@ export function HiveDock() {
   const holding = useCanvas((s) => !!s.drag);
   if (!holding || !isHiveCell(useCanvas.getState().drag!.payload)) return null;
   return (
-    <div role="region" aria-label="Momentum Hive action zones" className="fixed inset-x-3 bottom-[88px] z-20 lg:inset-x-6 lg:bottom-4">
+    <div role="region" aria-label="Momentum Hive action zones" className="fixed inset-x-3 bottom-[88px] z-[70] lg:inset-x-6 lg:bottom-4">
       <div className="card mx-auto flex w-fit max-w-full items-stretch gap-3 overflow-x-auto rounded-3xl! border-[color-mix(in_srgb,var(--gold)_35%,var(--line))] p-2.5 shadow-2xl backdrop-blur scroll-thin">
         <ActionZone def={zones.open} Icon={ExternalLink} variant="dock" />
         <ActionZone def={zones.archive} Icon={Archive} variant="dock" />
